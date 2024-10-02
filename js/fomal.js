@@ -3182,8 +3182,8 @@ if (localStorage.getItem("blogbg") != undefined) {
   document.getElementById("defineBg").innerText = `:root{
     --default-bg:url(/assets/default.jpg);
     --darkmode-bg:url(/assets/dark.jpg);
-    --mobileday-bg: url(https://lskypro.acozycotage.net/Fomalhaut/img/snow.webp);
-    --mobilenight-bg: url(https://lskypro.acozycotage.net/Fomalhaut/img/mb8.webp);
+    --mobileday-bg: url(/assets/daymob.png);
+    --mobilenight-bg: url(/assets/nightmob.png);
   }`;
 }
 // 切换背景主函数
