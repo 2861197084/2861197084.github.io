@@ -40,7 +40,7 @@ function getNew() {
             total: 2,  // 现在匹配实际数据条数
             items: [
                 {
-                    createdAt: "2024-12-19T10:00:00.000Z",
+                    createdAt: "2024-12-17T10:00:00.000Z",
                     content: "欢迎来到我的博客！这是我的第一条唠叨~ 🎉",
                     author: {
                         avatar: "/assets/avatar.webp",
@@ -48,11 +48,11 @@ function getNew() {
                     },
                     tag: {
                         name: "欢迎致辞",
-                        bgColor: "#42b883"
+                        bgColor: "#39c5bb"
                     }
                 },
                 {
-                    createdAt: "2024-12-17T20:15:00.000Z",
+                    createdAt: "2024-12-19T20:15:00.000Z",
                     content: "分享一些学习心得：坚持每天进步一点点，积少成多! 💪",
                     author: {
                         avatar: "/assets/avatar.webp",
@@ -60,7 +60,7 @@ function getNew() {
                     },
                     tag: {
                         name: "生活感悟",
-                        bgColor: "#e74c3c"
+                        bgColor: "#39c5bb"
                     }
                 }
             ]
