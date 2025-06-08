@@ -16,24 +16,72 @@ function getNew() {
     try {
         bibi.removeChild(document.getElementById('more'))
     } catch (error) { }
+    // bibi.innerHTML += '<div id="bb_loading"><img src="/assets/loading3.gif" alt="bb_loading"></div>' // bb_loading图片可以f12在我网站源码下载，也可以使用其他图片。
 
-    bibi.innerHTML += '<div id="bb_loading"><img src="/assets/loading3.gif" alt="bb_loading"></div>' // bb_loading图片可以f12在我网站源码下载，也可以使用其他图片。
+    // fetch(Url + page).then(res => res.json()).then((res) => {
+    //     total = res.data.total
+    //     items = res.data.items
+    //     nowNum += items.length
+    //     if (page == 1) {
+    //         document.querySelector('.bb-info').innerHTML = '<svg style="width:1.20em;height:1.20em;top:5px;fill:currentColor;overflow:hidden;position:relative"><use xlink:href="#icon-chat"></svg> 站长的唠叨(' + total + ')'
+    //     }
+    //     page += 1
+    // }).then(() => {
+    //     bb();
+    //     if (nowNum < total) {
+    //         document.getElementById('bibi').innerHTML += '<button id="more" onclick="getNew()">再翻翻</button>'
+    //     }
+    //     document.getElementById('bibi').removeChild(document.getElementById('bb_loading'))
+    // })
+    // 完整的静态数据（第39-58行）
+    // 完整的静态数据（第39-58行）
+    const staticData = {
+        data: {
+            total: 2,  // 现在匹配实际数据条数
+            items: [
+                {
+                    createdAt: "2024-12-19T10:00:00.000Z",
+                    content: "欢迎来到我的博客！这是我的第一条唠叨~ 🎉",
+                    author: {
+                        avatar: "/assets/avatar.webp",
+                        nickName: "MYFAV"
+                    },
+                    tag: {
+                        name: "欢迎致辞",
+                        bgColor: "#42b883"
+                    }
+                },
+                {
+                    createdAt: "2024-12-17T20:15:00.000Z",
+                    content: "分享一些学习心得：坚持每天进步一点点，积少成多! 💪",
+                    author: {
+                        avatar: "/assets/avatar.webp",
+                        nickName: "MYFAV"
+                    },
+                    tag: {
+                        name: "生活感悟",
+                        bgColor: "#e74c3c"
+                    }
+                }
+            ]
+        }
+    };
 
-    fetch(Url + page).then(res => res.json()).then((res) => {
-        total = res.data.total
-        items = res.data.items
-        nowNum += items.length
-        if (page == 1) {
-            document.querySelector('.bb-info').innerHTML = '<svg style="width:1.20em;height:1.20em;top:5px;fill:currentColor;overflow:hidden;position:relative"><use xlink:href="#icon-chat"></svg> 站长的唠叨(' + total + ')'
-        }
-        page += 1
-    }).then(() => {
-        bb();
-        if (nowNum < total) {
-            document.getElementById('bibi').innerHTML += '<button id="more" onclick="getNew()">再翻翻</button>'
-        }
-        document.getElementById('bibi').removeChild(document.getElementById('bb_loading'))
-    })
+    // 模拟API调用
+    total = staticData.data.items.length;
+    items = staticData.data.items;
+    nowNum += items.length;
+    
+    if (page == 1) {
+        document.querySelector('.bb-info').innerHTML = '<svg style="width:1.20em;height:1.20em;top:5px;fill:currentColor;overflow:hidden;position:relative"><use xlink:href="#icon-chat"></use></svg> 站长的唠叨(' + total + ')';
+    }
+    
+    bb();
+    
+    // 由于是静态数据，不需要"再翻翻"按钮
+    // if (nowNum < total) {
+    //     document.getElementById('bibi').innerHTML += '<button id="more" onclick="getNew()">再翻翻</button>'
+    // }
 }
 
 // 渲染数据

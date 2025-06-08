@@ -54,7 +54,7 @@ function tonav() {
     position = scroll;
   });
   //修复没有弄右键菜单的童鞋无法回顶部的问题
-  document.getElementById("page-name").innerText = document.title.split(" | Fomalhaut🥝")[0];
+  document.getElementById("page-name").innerText = document.title.split(" | MYFAV")[0];
 }
 
 function scrollToTop() {
@@ -675,7 +675,7 @@ if (document.body.clientWidth > 992) {
         borderRadius: 5 + 'px',
         right: 55.6 + 'px',
         nekoImg: "https://bu.dusays.com/2022/07/20/62d812db74be9.png",
-        hoverMsg: "秋天啦~",
+        hoverMsg: getSeason(),  // 使用动态季节
         color: "var(--theme-color)",
         during: 500,
         blog_body: "body",
@@ -1119,7 +1119,7 @@ function createtime1() {
   var dnum = Math.floor(days);
 
   var ascll = [
-    `欢迎来到米饭の小家!`,
+    `欢迎来到MYFAV の小家!`,
     `Future is now 🍭🍭🍭`,
     `
         
@@ -1137,7 +1137,7 @@ function createtime1() {
     "小站已经苟活",
     dnum,
     "天啦!",
-    "©2024 By Myf米饭",
+    "©2024 By MYFAV",
   ];
 
   setTimeout(
@@ -1176,7 +1176,7 @@ function createtime2() {
   setTimeout(
     console.warn.bind(
       console,
-      "%c ⚡ Powered by 米饭 %c 你正在访问米饭の小窝",
+      "%c ⚡ Powered by MYFAV %c 你正在访问MYFAV の小窝",
       "color:white; background-color:#f0ad4e",
       ""
     )
@@ -1286,8 +1286,8 @@ function share_() {
   try {
     // 截取标题
     var title = document.title;
-    var subTitle = title.endsWith("| 米饭") ? title.substring(0, title.length - 14) : title;
-    navigator.clipboard.writeText('米饭の站内分享\n标题：' + subTitle + '\n链接：' + url + '\n欢迎来访！🍭🍭🍭');
+    var subTitle = title.endsWith("| MYFAV") ? title.substring(0, title.length - 8) : title;
+    navigator.clipboard.writeText('MYFAV の站内分享\n标题：' + subTitle + '\n链接：' + url + '\n欢迎来访！🍭🍭🍭');
     new Vue({
       data: function () {
         this.$notify({
@@ -3555,3 +3555,144 @@ function toggleWinbox() {
 }
 
 /* 美化模块 end */
+
+// 添加季节判断函数
+function getSeason() {
+  const month = new Date().getMonth() + 1;
+  if (month >= 3 && month <= 5) {
+    return "春天啦~";
+  } else if (month >= 6 && month <= 8) {
+    return "夏天啦~";
+  } else if (month >= 9 && month <= 11) {
+    return "秋天啦~";
+  } else {
+    return "冬天啦~";
+  }
+}
+
+var defaultSetting = {
+  // ... 其他配置 ...
+  hoverMsg: getSeason(),  // 使用动态季节
+  // ... 其他配置 ...
+};
+
+// 分类统计图表功能
+function initCategoriesChart() {
+  // 检查是否在分类页面且图表容器存在
+  if (window.location.pathname !== '/categories/' || !document.getElementById('categories-echarts')) {
+      return;
+  }
+  
+  // 确保ECharts已加载
+  if (typeof echarts === 'undefined') {
+      console.log('ECharts 未加载，尝试加载...');
+      var script = document.createElement('script');
+      script.src = 'https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js';
+      script.onload = function() {
+          console.log('ECharts 加载完成，初始化图表...');
+          setTimeout(createChart, 100);
+      };
+      document.head.appendChild(script);
+      return;
+  }
+  
+  createChart();
+}
+
+function createChart() {
+  var container = document.getElementById('categories-echarts');
+  if (!container) {
+      console.log('图表容器不存在');
+      return;
+  }
+  
+  console.log('开始创建分类统计图表...');
+  
+  var themeMode = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  var categoriesChart = echarts.init(container, themeMode);
+  
+  // 分类数据
+  var categoryData = [
+      { name: 'Markdown', value: 1 },
+      { name: '数学基础', value: 1 }
+  ];
+  
+  var categoriesOption = {
+      backgroundColor: 'transparent',
+      title: {
+          text: '文章分类统计图📊',
+          textStyle: {
+              fontSize: 18,
+              fontWeight: 'bold'
+          },
+          left: 'center',
+          top: 20
+      },
+      tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+      },
+      legend: {
+          orient: 'horizontal',
+          bottom: 10,
+          textStyle: {
+              fontSize: 12
+          }
+      },
+      series: [{
+          name: '分类统计',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          center: ['50%', '55%'],
+          avoidLabelOverlap: false,
+          itemStyle: {
+              borderRadius: 8,
+              borderColor: '#fff',
+              borderWidth: 2
+          },
+          label: {
+              show: true,
+              position: 'outside',
+              formatter: '{b}\n{c}篇 ({d}%)',
+              fontSize: 12
+          },
+          labelLine: {
+              show: true
+          },
+          data: categoryData,
+          emphasis: {
+              itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+          }
+      }]
+  };
+  
+  categoriesChart.setOption(categoriesOption);
+  
+  // 响应式调整
+  window.addEventListener('resize', function() {
+      categoriesChart.resize();
+  });
+  
+  // 主题切换时重新初始化
+  document.addEventListener('pjax:complete', function() {
+      if (window.location.pathname === '/categories/') {
+          setTimeout(initCategoriesChart, 500);
+      }
+  });
+  
+  console.log('分类统计图表创建完成！');
+}
+
+// 页面加载完成后执行
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(initCategoriesChart, 1000);
+});
+
+// PJAX切换后执行
+document.addEventListener('pjax:complete', function() {
+  setTimeout(initCategoriesChart, 500);
+});
