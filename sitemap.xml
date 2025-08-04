@@ -110,15 +110,6 @@
   </url>
   
   <url>
-    <loc>https://www.ricemifan.top/life/games/index.html</loc>
-    
-    <lastmod>2023-03-22</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.ricemifan.top/box/animation/index.html</loc>
     
     <lastmod>2023-03-22</lastmod>
@@ -128,7 +119,16 @@
   </url>
   
   <url>
-    <loc>https://www.ricemifan.top/site/census/index.html</loc>
+    <loc>https://www.ricemifan.top/life/music/index.html</loc>
+    
+    <lastmod>2023-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.ricemifan.top/life/games/index.html</loc>
     
     <lastmod>2023-03-22</lastmod>
     
@@ -146,7 +146,7 @@
   </url>
   
   <url>
-    <loc>https://www.ricemifan.top/site/time/index.html</loc>
+    <loc>https://www.ricemifan.top/site/census/index.html</loc>
     
     <lastmod>2023-03-22</lastmod>
     
@@ -155,7 +155,7 @@
   </url>
   
   <url>
-    <loc>https://www.ricemifan.top/life/music/index.html</loc>
+    <loc>https://www.ricemifan.top/site/time/index.html</loc>
     
     <lastmod>2023-03-22</lastmod>
     
@@ -180,13 +180,6 @@
     <priority>1.0</priority>
   </url>
 
-  
-  <url>
-    <loc>https://www.ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2025-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
   
   <url>
     <loc>https://www.ricemifan.top/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/</loc>
