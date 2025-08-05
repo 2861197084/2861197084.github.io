@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://www.ricemifan.top/posts/model_parameter_io.html</loc>
+    <lastmod>2025-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://www.ricemifan.top/posts/custom_layer.html</loc>
+    <lastmod>2025-08-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.ricemifan.top/posts/layers_and_blocks.html</loc>
+    <lastmod>2025-08-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.ricemifan.top/posts/deferred_initialization.html</loc>
+    <lastmod>2025-08-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.ricemifan.top/posts/parameter_management.html</loc>
+    <lastmod>2025-08-03</lastmod>
+  </url>
+  <url>
     <loc>https://www.ricemifan.top/posts/weight_decay_l2_regularization.html</loc>
     <lastmod>2025-04-26</lastmod>
   </url>
