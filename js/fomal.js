@@ -3587,7 +3587,7 @@ function initCategoriesChart() {
   if (typeof echarts === 'undefined') {
       console.log('ECharts 未加载，尝试加载...');
       var script = document.createElement('script');
-      script.src = 'https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js';
+      script.src = 'https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js';
       script.onload = function() {
           console.log('ECharts 加载完成，初始化图表...');
           setTimeout(createChart, 100);
