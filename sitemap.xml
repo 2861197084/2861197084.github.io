@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.ricemifan.top/personal/about/index.html</loc>
+    
+    <lastmod>2025-08-10</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.ricemifan.top/categories/index.html</loc>
     
     <lastmod>2025-08-06</lastmod>
@@ -68,15 +77,6 @@
     <loc>https://www.ricemifan.top/posts/parameter_management.html</loc>
     
     <lastmod>2025-08-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.ricemifan.top/personal/about/index.html</loc>
-    
-    <lastmod>2025-06-08</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -200,24 +200,6 @@
   </url>
   
   <url>
-    <loc>https://www.ricemifan.top/life/games/index.html</loc>
-    
-    <lastmod>2023-03-22</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.ricemifan.top/site/census/index.html</loc>
-    
-    <lastmod>2023-03-22</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.ricemifan.top/life/music/index.html</loc>
     
     <lastmod>2023-03-22</lastmod>
@@ -227,7 +209,25 @@
   </url>
   
   <url>
+    <loc>https://www.ricemifan.top/life/games/index.html</loc>
+    
+    <lastmod>2023-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.ricemifan.top/site/time/index.html</loc>
+    
+    <lastmod>2023-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.ricemifan.top/site/census/index.html</loc>
     
     <lastmod>2023-03-22</lastmod>
     
@@ -268,13 +268,6 @@
   </url>
   
   <url>
-    <loc>https://www.ricemifan.top/tags/PyTorch/</loc>
-    <lastmod>2025-08-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.ricemifan.top/tags/Markdown/</loc>
     <lastmod>2025-08-10</lastmod>
     <changefreq>weekly</changefreq>
@@ -283,6 +276,13 @@
   
   <url>
     <loc>https://www.ricemifan.top/tags/%E5%A4%96%E6%8C%82%E6%A0%87%E7%AD%BE/</loc>
+    <lastmod>2025-08-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.ricemifan.top/tags/PyTorch/</loc>
     <lastmod>2025-08-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
