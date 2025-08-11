@@ -3,11 +3,11 @@
   <title>MyFavourite</title>
   
   
-  <link href="https://www.ricemifan.top/atom.xml" rel="self"/>
+  <link href="https://ricemifan.top/atom.xml" rel="self"/>
   
-  <link href="https://www.ricemifan.top/"/>
+  <link href="https://ricemifan.top/"/>
   <updated>2025-08-05T04:00:00.000Z</updated>
-  <id>https://www.ricemifan.top/</id>
+  <id>https://ricemifan.top/</id>
   
   <author>
     <name>MYFAV</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>从全连接层到卷积层：计算机视觉的数学基础</title>
-    <link href="https://www.ricemifan.top/posts/from_fc_to_conv.html"/>
-    <id>https://www.ricemifan.top/posts/from_fc_to_conv.html</id>
+    <link href="https://ricemifan.top/posts/from_fc_to_conv.html"/>
+    <id>https://ricemifan.top/posts/from_fc_to_conv.html</id>
     <published>2025-08-05T04:00:00.000Z</published>
     <updated>2025-08-05T04:00:00.000Z</updated>
     
@@ -30,19 +30,19 @@
     
     
     
-    <category term="深度学习" scheme="https://www.ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="深度学习" scheme="https://ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="卷积神经网络" scheme="https://www.ricemifan.top/tags/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/"/>
+    <category term="卷积神经网络" scheme="https://ricemifan.top/tags/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/"/>
     
-    <category term="卷积与池化" scheme="https://www.ricemifan.top/tags/%E5%8D%B7%E7%A7%AF%E4%B8%8E%E6%B1%A0%E5%8C%96/"/>
+    <category term="卷积与池化" scheme="https://ricemifan.top/tags/%E5%8D%B7%E7%A7%AF%E4%B8%8E%E6%B1%A0%E5%8C%96/"/>
     
   </entry>
   
   <entry>
     <title>模型参数的读写</title>
-    <link href="https://www.ricemifan.top/posts/model_parameter_io.html"/>
-    <id>https://www.ricemifan.top/posts/model_parameter_io.html</id>
+    <link href="https://ricemifan.top/posts/model_parameter_io.html"/>
+    <id>https://ricemifan.top/posts/model_parameter_io.html</id>
     <published>2025-08-05T02:00:00.000Z</published>
     <updated>2025-08-05T02:00:00.000Z</updated>
     
@@ -53,19 +53,19 @@
     
     
     
-    <category term="深度学习" scheme="https://www.ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="深度学习" scheme="https://ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="深度学习基础" scheme="https://www.ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
+    <category term="深度学习基础" scheme="https://ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
     
-    <category term="PyTorch" scheme="https://www.ricemifan.top/tags/PyTorch/"/>
+    <category term="PyTorch" scheme="https://ricemifan.top/tags/PyTorch/"/>
     
   </entry>
   
   <entry>
     <title>自定义层</title>
-    <link href="https://www.ricemifan.top/posts/custom_layer.html"/>
-    <id>https://www.ricemifan.top/posts/custom_layer.html</id>
+    <link href="https://ricemifan.top/posts/custom_layer.html"/>
+    <id>https://ricemifan.top/posts/custom_layer.html</id>
     <published>2025-08-04T11:00:00.000Z</published>
     <updated>2025-08-04T11:00:00.000Z</updated>
     
@@ -76,19 +76,19 @@
     
     
     
-    <category term="深度学习" scheme="https://www.ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="深度学习" scheme="https://ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="深度学习基础" scheme="https://www.ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
+    <category term="深度学习基础" scheme="https://ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
     
-    <category term="PyTorch" scheme="https://www.ricemifan.top/tags/PyTorch/"/>
+    <category term="PyTorch" scheme="https://ricemifan.top/tags/PyTorch/"/>
     
   </entry>
   
   <entry>
     <title>层和块</title>
-    <link href="https://www.ricemifan.top/posts/layers_and_blocks.html"/>
-    <id>https://www.ricemifan.top/posts/layers_and_blocks.html</id>
+    <link href="https://ricemifan.top/posts/layers_and_blocks.html"/>
+    <id>https://ricemifan.top/posts/layers_and_blocks.html</id>
     <published>2025-08-04T10:00:00.000Z</published>
     <updated>2025-08-04T10:00:00.000Z</updated>
     
@@ -99,19 +99,19 @@
     
     
     
-    <category term="深度学习" scheme="https://www.ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="深度学习" scheme="https://ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="深度学习基础" scheme="https://www.ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
+    <category term="深度学习基础" scheme="https://ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
     
-    <category term="PyTorch" scheme="https://www.ricemifan.top/tags/PyTorch/"/>
+    <category term="PyTorch" scheme="https://ricemifan.top/tags/PyTorch/"/>
     
   </entry>
   
   <entry>
     <title>延后初始化</title>
-    <link href="https://www.ricemifan.top/posts/deferred_initialization.html"/>
-    <id>https://www.ricemifan.top/posts/deferred_initialization.html</id>
+    <link href="https://ricemifan.top/posts/deferred_initialization.html"/>
+    <id>https://ricemifan.top/posts/deferred_initialization.html</id>
     <published>2025-08-04T02:00:00.000Z</published>
     <updated>2025-08-04T02:00:00.000Z</updated>
     
@@ -122,19 +122,19 @@
     
     
     
-    <category term="深度学习" scheme="https://www.ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="深度学习" scheme="https://ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="深度学习基础" scheme="https://www.ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
+    <category term="深度学习基础" scheme="https://ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
     
-    <category term="PyTorch" scheme="https://www.ricemifan.top/tags/PyTorch/"/>
+    <category term="PyTorch" scheme="https://ricemifan.top/tags/PyTorch/"/>
     
   </entry>
   
   <entry>
     <title>参数管理</title>
-    <link href="https://www.ricemifan.top/posts/parameter_management.html"/>
-    <id>https://www.ricemifan.top/posts/parameter_management.html</id>
+    <link href="https://ricemifan.top/posts/parameter_management.html"/>
+    <id>https://ricemifan.top/posts/parameter_management.html</id>
     <published>2025-08-03T02:00:00.000Z</published>
     <updated>2025-08-03T02:00:00.000Z</updated>
     
@@ -145,19 +145,19 @@
     
     
     
-    <category term="深度学习" scheme="https://www.ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="深度学习" scheme="https://ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="深度学习基础" scheme="https://www.ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
+    <category term="深度学习基础" scheme="https://ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
     
-    <category term="PyTorch" scheme="https://www.ricemifan.top/tags/PyTorch/"/>
+    <category term="PyTorch" scheme="https://ricemifan.top/tags/PyTorch/"/>
     
   </entry>
   
   <entry>
     <title>权重衰减</title>
-    <link href="https://www.ricemifan.top/posts/weight_decay_l2_regularization.html"/>
-    <id>https://www.ricemifan.top/posts/weight_decay_l2_regularization.html</id>
+    <link href="https://ricemifan.top/posts/weight_decay_l2_regularization.html"/>
+    <id>https://ricemifan.top/posts/weight_decay_l2_regularization.html</id>
     <published>2025-04-26T10:00:00.000Z</published>
     <updated>2025-04-26T10:00:00.000Z</updated>
     
@@ -168,17 +168,17 @@
     
     
     
-    <category term="深度学习" scheme="https://www.ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="深度学习" scheme="https://ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="深度学习基础" scheme="https://www.ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
+    <category term="深度学习基础" scheme="https://ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
     
   </entry>
   
   <entry>
     <title>过拟合及其对抗方法：模型选择与多项式拟合实验</title>
-    <link href="https://www.ricemifan.top/posts/overfitting_model_selection.html"/>
-    <id>https://www.ricemifan.top/posts/overfitting_model_selection.html</id>
+    <link href="https://ricemifan.top/posts/overfitting_model_selection.html"/>
+    <id>https://ricemifan.top/posts/overfitting_model_selection.html</id>
     <published>2025-04-25T02:00:00.000Z</published>
     <updated>2025-04-25T02:00:00.000Z</updated>
     
@@ -189,17 +189,17 @@
     
     
     
-    <category term="深度学习" scheme="https://www.ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="深度学习" scheme="https://ricemifan.top/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
     
     
-    <category term="深度学习基础" scheme="https://www.ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
+    <category term="深度学习基础" scheme="https://ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
     
   </entry>
   
   <entry>
     <title>线性代数基础：标量、向量、矩阵与张量</title>
-    <link href="https://www.ricemifan.top/posts/linear_algebra_basics.html"/>
-    <id>https://www.ricemifan.top/posts/linear_algebra_basics.html</id>
+    <link href="https://ricemifan.top/posts/linear_algebra_basics.html"/>
+    <id>https://ricemifan.top/posts/linear_algebra_basics.html</id>
     <published>2024-12-08T02:00:00.000Z</published>
     <updated>2024-12-08T02:00:00.000Z</updated>
     
@@ -210,19 +210,19 @@
     
     
     
-    <category term="数学基础" scheme="https://www.ricemifan.top/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"/>
+    <category term="数学基础" scheme="https://ricemifan.top/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"/>
     
     
-    <category term="深度学习基础" scheme="https://www.ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
+    <category term="深度学习基础" scheme="https://ricemifan.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"/>
     
-    <category term="数学基础" scheme="https://www.ricemifan.top/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"/>
+    <category term="数学基础" scheme="https://ricemifan.top/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"/>
     
   </entry>
   
   <entry>
     <title>Markdown语法与外挂标签写法汇总</title>
-    <link href="https://www.ricemifan.top/posts/2013454d.html"/>
-    <id>https://www.ricemifan.top/posts/2013454d.html</id>
+    <link href="https://ricemifan.top/posts/2013454d.html"/>
+    <id>https://ricemifan.top/posts/2013454d.html</id>
     <published>2024-09-29T10:19:03.000Z</published>
     <updated>2024-09-30T14:00:00.000Z</updated>
     
@@ -233,12 +233,12 @@
     
     
     
-    <category term="Markdown" scheme="https://www.ricemifan.top/categories/Markdown/"/>
+    <category term="Markdown" scheme="https://ricemifan.top/categories/Markdown/"/>
     
     
-    <category term="Markdown" scheme="https://www.ricemifan.top/tags/Markdown/"/>
+    <category term="Markdown" scheme="https://ricemifan.top/tags/Markdown/"/>
     
-    <category term="外挂标签" scheme="https://www.ricemifan.top/tags/%E5%A4%96%E6%8C%82%E6%A0%87%E7%AD%BE/"/>
+    <category term="外挂标签" scheme="https://ricemifan.top/tags/%E5%A4%96%E6%8C%82%E6%A0%87%E7%AD%BE/"/>
     
   </entry>
   
