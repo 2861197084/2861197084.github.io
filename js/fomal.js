@@ -79,6 +79,7 @@ $.ajax({
   dataType: 'jsonp',
   success: function (res) {
     ipLoacation = res;
+    try { showWelcome() } catch (e) {}
   }
 })
 function getDistance(e1, n1, e2, n2) {
@@ -98,6 +99,9 @@ function getDistance(e1, n1, e2, n2) {
 }
 
 function showWelcome() {
+	// 安全防护：元素或定位数据未就绪则直接返回
+	if (!document.getElementById("welcome-info")) return;
+	if (!window.ipLoacation || !ipLoacation.result) return;
 
   let dist = getDistance(113.34499552, 23.15537143, ipLoacation.result.location.lng, ipLoacation.result.location.lat); //这里换成自己的经纬度
   let pos = ipLoacation.result.ad_info.nation;
