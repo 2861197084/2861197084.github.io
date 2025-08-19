@@ -103,7 +103,7 @@ function showWelcome() {
 	if (!document.getElementById("welcome-info")) return;
 	if (!window.ipLoacation || !ipLoacation.result) return;
 
-  let dist = getDistance(113.34499552, 23.15537143, ipLoacation.result.location.lng, ipLoacation.result.location.lat); //这里换成自己的经纬度
+  let dist = getDistance(117.2844, 34.2618, ipLoacation.result.location.lng, ipLoacation.result.location.lat); //江苏徐州的经纬度坐标
   let pos = ipLoacation.result.ad_info.nation;
   let ip;
   let posdesc;
