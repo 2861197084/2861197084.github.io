@@ -1,0 +1,1103 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><div id="myscoll"></div><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>CNN 网络架构的设计 | MyFavourite</title><meta name="keywords" content="深度学习基础,PyTorch,CNN架构设计,NAS,RegNet,AnyNet"><meta name="author" content="MYFAV"><meta name="copyright" content="MYFAV"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="🏗️深入探索CNN架构设计的演进历程，从手工设计到网络架构搜索(NAS)，理解RegNet的设计空间优化方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CNN 网络架构的设计">
+<meta property="og:url" content="https://ricemifan.top/posts/cnn-architecture-design.html">
+<meta property="og:site_name" content="MyFavourite">
+<meta property="og:description" content="🏗️深入探索CNN架构设计的演进历程，从手工设计到网络架构搜索(NAS)，理解RegNet的设计空间优化方法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://source.fomal.cc/img/default_cover_14.webp">
+<meta property="article:published_time" content="2025-08-12T02:00:00.000Z">
+<meta property="article:modified_time" content="2025-08-12T02:00:00.000Z">
+<meta property="article:author" content="MYFAV">
+<meta property="article:tag" content="深度学习基础">
+<meta property="article:tag" content="PyTorch">
+<meta property="article:tag" content="CNN架构设计">
+<meta property="article:tag" content="NAS">
+<meta property="article:tag" content="RegNet">
+<meta property="article:tag" content="AnyNet">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://source.fomal.cc/img/default_cover_14.webp"><link rel="shortcut icon" href="/"><link rel="canonical" href="https://ricemifan.top/posts/cnn-architecture-design"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.staticfile.org/fancyapps-ui/4.0.31/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: '/pluginsSrc/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: '/pluginsSrc/flickr-justified-gallery/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'CNN 网络架构的设计',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-08-12 10:00:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const now = new Date()
+          const hour = now.getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="https://cdn1.tianli0.top/npm/element-ui@2.15.6/packages/theme-chalk/lib/index.css"><style id="themeColor"></style><style id="rightSide"></style><style id="transPercent"></style><style id="blurNum"></style><style id="settingStyle"></style><span id="fps"></span><style id="defineBg"></style><style id="menu_shadow"></style><script src="https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js"></script><svg aria-hidden="true" style="position:absolute; overflow:hidden; width:0; height:0"><symbol id="icon-sun" viewBox="0 0 1024 1024"><path d="M960 512l-128 128v192h-192l-128 128-128-128H192v-192l-128-128 128-128V192h192l128-128 128 128h192v192z" fill="#FFD878" p-id="8420"></path><path d="M736 512a224 224 0 1 0-448 0 224 224 0 1 0 448 0z" fill="#FFE4A9" p-id="8421"></path><path d="M512 109.248L626.752 224H800v173.248L914.752 512 800 626.752V800h-173.248L512 914.752 397.248 800H224v-173.248L109.248 512 224 397.248V224h173.248L512 109.248M512 64l-128 128H192v192l-128 128 128 128v192h192l128 128 128-128h192v-192l128-128-128-128V192h-192l-128-128z" fill="#4D5152" p-id="8422"></path><path d="M512 320c105.888 0 192 86.112 192 192s-86.112 192-192 192-192-86.112-192-192 86.112-192 192-192m0-32a224 224 0 1 0 0 448 224 224 0 0 0 0-448z" fill="#4D5152" p-id="8423"></path></symbol><symbol id="icon-moon" viewBox="0 0 1024 1024"><path d="M611.370667 167.082667a445.013333 445.013333 0 0 1-38.4 161.834666 477.824 477.824 0 0 1-244.736 244.394667 445.141333 445.141333 0 0 1-161.109334 38.058667 85.077333 85.077333 0 0 0-65.066666 135.722666A462.08 462.08 0 1 0 747.093333 102.058667a85.077333 85.077333 0 0 0-135.722666 65.024z" fill="#FFB531" p-id="11345"></path><path d="M329.728 274.133333l35.157333-35.157333a21.333333 21.333333 0 1 0-30.165333-30.165333l-35.157333 35.157333-35.114667-35.157333a21.333333 21.333333 0 0 0-30.165333 30.165333l35.114666 35.157333-35.114666 35.157334a21.333333 21.333333 0 1 0 30.165333 30.165333l35.114667-35.157333 35.157333 35.157333a21.333333 21.333333 0 1 0 30.165333-30.165333z" fill="#030835" p-id="11346"></path></symbol></svg><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/animate.min.css" media="print" onload="this.media='screen'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-filter-gitcalendar/lib/gitcalendar.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/font-awesome-animation.min.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/tag_plugins.css" media="defer" onload="this.media='all'"><script src="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/carousel-touch.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="MyFavourite" type="application/atom+xml">
+</head><body><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><div class="loading-img"></div><div class="loading-image-dot"></div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/avatar.webp" onerror="onerror=null;src='/assets/r1.jpg'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-home"></use></svg><span class="menu_word" style="font-size:17px"> 首页</span></a></div><div class="menus_item"><a class="site-page group faa-parent animated-hover hide" href="javascript:void(0);"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon--article"></use></svg><span class="menu_word" style="font-size:17px"> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-guidang1">                   </use></svg><span class="menu_word" style="font-size:17px"> 归档</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-sekuaibiaoqian">                   </use></svg><span class="menu_word" style="font-size:17px"> 标签</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-fenlei">                   </use></svg><span class="menu_word" style="font-size:17px"> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group faa-parent animated-hover hide" href="javascript:void(0);"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-shejiaoxinxi"></use></svg><span class="menu_word" style="font-size:17px"> 社交</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/social/fcircle/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-pengyouquan">                   </use></svg><span class="menu_word" style="font-size:17px"> 朋友圈</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/comments/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-liuyan">                   </use></svg><span class="menu_word" style="font-size:17px"> 留言板</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/social/link/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-lianjie">                   </use></svg><span class="menu_word" style="font-size:17px"> 友人帐</span></a></li></ul></div><div class="menus_item"><a class="site-page group faa-parent animated-hover hide" href="javascript:void(0);"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-maoliang"></use></svg><span class="menu_word" style="font-size:17px"> 个人</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/personal/bb/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-qunliaotian">                   </use></svg><span class="menu_word" style="font-size:17px"> 唠叨</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/personal/love/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-love-sign">                   </use></svg><span class="menu_word" style="font-size:17px"> 恋爱小屋</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/personal/about/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-paperplane">                   </use></svg><span class="menu_word" style="font-size:17px"> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">MyFavourite</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page faa-parent animated-hover" href="/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-home"></use></svg><span class="menu_word" style="font-size:17px"> 首页</span></a></div><div class="menus_item"><a class="site-page group faa-parent animated-hover hide" href="javascript:void(0);"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon--article"></use></svg><span class="menu_word" style="font-size:17px"> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-guidang1">                   </use></svg><span class="menu_word" style="font-size:17px"> 归档</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-sekuaibiaoqian">                   </use></svg><span class="menu_word" style="font-size:17px"> 标签</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-fenlei">                   </use></svg><span class="menu_word" style="font-size:17px"> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group faa-parent animated-hover hide" href="javascript:void(0);"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-shejiaoxinxi"></use></svg><span class="menu_word" style="font-size:17px"> 社交</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/social/fcircle/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-pengyouquan">                   </use></svg><span class="menu_word" style="font-size:17px"> 朋友圈</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/comments/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-liuyan">                   </use></svg><span class="menu_word" style="font-size:17px"> 留言板</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/social/link/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-lianjie">                   </use></svg><span class="menu_word" style="font-size:17px"> 友人帐</span></a></li></ul></div><div class="menus_item"><a class="site-page group faa-parent animated-hover hide" href="javascript:void(0);"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-maoliang"></use></svg><span class="menu_word" style="font-size:17px"> 个人</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/personal/bb/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-qunliaotian">                   </use></svg><span class="menu_word" style="font-size:17px"> 唠叨</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/personal/love/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-love-sign">                   </use></svg><span class="menu_word" style="font-size:17px"> 恋爱小屋</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/personal/about/"><svg class="menu_icon faa-tada" aria-hidden="true" style="width:1.30em;height:1.30em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;"><use xlink:href="#icon-paperplane">                   </use></svg><span class="menu_word" style="font-size:17px"> 关于</span></a></li></ul></div></div><center id="name-container"><a id="page-name" href="javascript:scrollToTop()">PAGE_NAME</a></center><div id="nav-right"><div id="search-button"><a class="search faa-parent animated-hover" title="检索站内任何你想要的信息"><svg class="faa-tada icon" style="height:24px;width:24px;fill:currentColor;position:relative;top:6px" aria-hidden="true"><use xlink:href="#icon-valentine_-search-love-find-heart"></use></svg><span> 搜索</span></a></div><a class="meihua faa-parent animated-hover" onclick="toggleWinbox()" title="美化设置-自定义你的风格" id="meihua-button"><svg class="faa-tada icon" style="height:26px;width:26px;fill:currentColor;position:relative;top:8px" aria-hidden="true"><use xlink:href="#icon-tupian1"></use></svg></a><a class="sun_moon faa-parent animated-hover" onclick="switchNightMode()" title="浅色和深色模式转换" id="nightmode-button"><svg class="faa-tada" style="height:25px;width:25px;fill:currentColor;position:relative;top:7px" viewBox="0 0 1024 1024"><use id="modeicon" xlink:href="#icon-moon">       </use></svg></a><div id="toggle-menu"><a><i class="fas fa-bars fa-fw"></i></a></div></div></div></nav><div id="post-info"><h1 class="post-title">CNN 网络架构的设计</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><svg class="meta_icon post-meta-icon" style="width:30px;height:30px;position:relative;top:10px"><use xlink:href="#icon-rili"></use></svg><span class="post-meta-label">发表于 </span><time class="post-meta-date-created" datetime="2025-08-12T02:00:00.000Z" title="发表于 2025-08-12 10:00:00">2025-08-12</time><span class="post-meta-separator">|</span><svg class="meta_icon post-meta-icon" style="width:18px;height:18px;position:relative;top:5px"><use xlink:href="#icon-gengxin1"></use></svg><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-08-12T02:00:00.000Z" title="更新于 2025-08-12 10:00:00">2025-08-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><svg class="meta_icon post-meta-icon" style="width:18px;height:18px;position:relative;top:5px"><use xlink:href="#icon-biaoqian"></use></svg><a class="post-meta-categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><svg class="meta_icon post-meta-icon" style="width:25px;height:25px;position:relative;top:8px"><use xlink:href="#icon-charuword"></use></svg><span class="post-meta-label">字数总计:</span><span class="word-count">5920</span><span class="post-meta-separator">|</span><svg class="meta_icon post-meta-icon" style="width:20px;height:20px;position:relative;top:5px"><use xlink:href="#icon-shizhong"></use></svg><span class="post-meta-label">阅读时长:</span><span>22分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="CNN 网络架构的设计"><svg class="meta_icon post-meta-icon" style="width:25px;height:25px;position:relative;top:5px"><use xlink:href="#icon-eye"></use></svg><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><div class="note info flat"><p>本文基于d2l项目内容整理，深入探讨CNN网络架构设计的演进历程，从手工设计的网络工程方法到自动化的网络架构搜索技术，重点介绍RegNet的网络设计空间优化方法。</p>
+</div>
+<div class="note primary icon-padding flat"><i class="note-icon fas fa-history"></i><p><strong>CNN架构设计的演进历程：</strong></p>
+<p>深度神经网络的架构设计历经了从直觉驱动到系统化设计的重要转变：</p>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>AlexNet</strong>：堆叠卷积块构建深度网络的开创性工作</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>VGG</strong>：证明3×3小卷积核的有效性</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>NiN</strong>：引入1×1卷积和全局平均池化的创新设计</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>GoogLeNet</strong>：Inception模块实现多尺度特征并行捕获</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>ResNet/ResNeXt</strong>：残差连接解决深度网络训练难题</p>
+            </div></div>
+<div class="note warning icon-padding flat"><i class="note-icon fas fa-search"></i><p><strong>网络架构搜索(NAS)的挑战：</strong></p>
+<p>NAS技术通过自动化搜索在给定设计空间内找到最优网络架构，涉及：</p>
+<ul>
+<li>网络深度、宽度的组合优化</li>
+<li>卷积核大小与数量的选择</li>
+<li>层连接方式和激活函数配置</li>
+<li>瓶颈比率和分组卷积参数</li>
+</ul>
+<p>但NAS需要消耗巨大的计算资源，限制了其实际应用。</p>
+</div>
+<div class="note success icon-padding flat"><i class="note-icon fas fa-lightbulb"></i><p><strong>网络设计空间(NDS)的创新：</strong></p>
+<p>Radosavovic等人于2020年提出的NDS方法提供了更高效的解决方案：</p>
+<ul>
+<li>结合手动设计洞察与NAS系统性优势</li>
+<li>通过分析参数组合找出通用设计原则</li>
+<li>优化整个网络族而非单一网络实例</li>
+<li>产出RegNetX/RegNetY系列高性能网络</li>
+</ul>
+</div>
+<hr>
+<h1 id="1-AnyNet：系统化的网络设计空间"><a href="#1-AnyNet：系统化的网络设计空间" class="headerlink" title="1. AnyNet：系统化的网络设计空间"></a>1. AnyNet：系统化的网络设计空间</h1><h2 id="1-1-网络架构组成"><a href="#1-1-网络架构组成" class="headerlink" title="1.1 网络架构组成"></a>1.1 网络架构组成</h2><div class="note blue icon-padding flat"><i class="note-icon fas fa-sitemap"></i><p><strong>AnyNet网络架构的三层结构：</strong></p>
+<p>AnyNet探索了计算机视觉网络的统一设计框架，由三个核心组件构成：</p>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>茎 (Stem)</strong>：快速降维的初始处理层</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>主体 (Body)</strong>：多阶段的特征提取核心</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>头 (Head)</strong>：任务特定的输出映射层</p>
+            </div></div>
+<div class="img-wrap"><div class="img-bg"><img class="img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/article/CNN 网络架构的设计/1746780209271-2ece4852-aad4-460a-b14d-d35f9a6d76f3.jpeg" alt="AnyNet网络架构示意图"/></div><span class="image-caption">AnyNet网络架构示意图</span></div>
+<div class="tabs" id="anynet架构详解"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#anynet架构详解-1">茎部设计</button></li><li class="tab"><button type="button" data-href="#anynet架构详解-2">主体结构</button></li><li class="tab"><button type="button" data-href="#anynet架构详解-3">头部输出</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="anynet架构详解-1"><p><strong>茎 (Stem) 的功能与设计：</strong></p>
+<div class="note green icon-padding flat"><i class="note-icon fas fa-seedling"></i><p><strong>主要功能：</strong></p>
+<ul>
+<li>接收RGB图像输入 (3×224×224)</li>
+<li>快速降低空间维度 (224×224 → 112×112)</li>
+<li>增加特征通道数 (3 → $w_0$ 通道)</li>
+<li>为后续特征提取做准备</li>
+</ul>
+</div>
+
+<p><strong>设计细节：</strong></p>
+<ul>
+<li>使用步幅为2的3×3卷积层实现下采样</li>
+<li>包含批量归一化层提高训练稳定性</li>
+<li>遵循深度CNN早期快速降维的标准实践</li>
+</ul><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="anynet架构详解-2"><p><strong>主体 (Body) 的多阶段设计：</strong></p>
+<div class="note orange icon-padding flat"><i class="note-icon fas fa-layer-group"></i><p><strong>4阶段渐进式处理：</strong></p>
+<p>各阶段的分辨率与通道变化：</p>
+<ul>
+<li><strong>阶段1</strong>：$w_0 \times 112^2 \rightarrow w_1 \times 56^2$</li>
+<li><strong>阶段2</strong>：$w_1 \times 56^2 \rightarrow w_2 \times 28^2$  </li>
+<li><strong>阶段3</strong>：$w_2 \times 28^2 \rightarrow w_3 \times 14^2$</li>
+<li><strong>阶段4</strong>：$w_3 \times 14^2 \rightarrow w_4 \times 7^2$</li>
+</ul>
+</div>
+
+<p><strong>设计原则：</strong></p>
+<ul>
+<li>每阶段空间分辨率减半 (面积减为1/4)</li>
+<li>逐步增加特征通道数</li>
+<li>使用ResNeXt块作为基本构建单元</li>
+<li>第一个块负责维度变换，后续块进行特征精炼</li>
+</ul><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="anynet架构详解-3"><p><strong>头 (Head) 的标准化设计：</strong></p>
+<div class="note purple icon-padding flat"><i class="note-icon fas fa-brain"></i><p><strong>分类头的处理流程：</strong></p>
+<ol>
+<li>全局平均池化：$w_4 \times 7^2 \rightarrow w_4 \times 1^2$</li>
+<li>特征扁平化：$w_4 \times 1^2 \rightarrow w_4$</li>
+<li>全连接映射：$w_4 \rightarrow n_c$ (分类数)</li>
+</ol>
+</div>
+
+<p><strong>适应性设计：</strong></p>
+<ul>
+<li>可根据具体任务调整 (分类、检测、分割)</li>
+<li>标准化的接口便于模块化设计</li>
+<li>支持不同的输出维度需求</li>
+</ul><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h2 id="1-2-ResNeXt块的参数化设计"><a href="#1-2-ResNeXt块的参数化设计" class="headerlink" title="1.2 ResNeXt块的参数化设计"></a>1.2 ResNeXt块的参数化设计</h2><div class="note warning icon-padding flat"><i class="note-icon fas fa-cogs"></i><p><strong>ResNeXt块的关键参数：</strong></p>
+<p>AnyNet使用ResNeXt块作为基本构建单元，涉及两个核心参数：</p>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>瓶颈比率</strong> $b$：控制中间3×3卷积层的通道压缩比例</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>分组卷积组数</strong> $g$：决定分组卷积的并行度和参数效率</p>
+            </div></div>
+<div class="tabs" id="resnext参数详解"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#resnext参数详解-1">瓶颈比率</button></li><li class="tab"><button type="button" data-href="#resnext参数详解-2">分组卷积</button></li><li class="tab"><button type="button" data-href="#resnext参数详解-3">设计空间</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="resnext参数详解-1"><p><strong>瓶颈比率 $b$ 的作用机制：</strong></p>
+<p>当输出通道数为 $w$ 时，中间通道数为 $\lfloor w/b \rfloor$：</p>
+<div class="note blue icon-padding flat"><i class="note-icon fas fa-compress-arrows-alt"></i><p><strong>通道压缩策略：</strong></p>
+<ul>
+<li>$b = 1$：无压缩，中间通道数 = 输出通道数</li>
+<li>$b = 2$：压缩一半，中间通道数 = 输出通道数/2  </li>
+<li>$b = 4$：压缩到1/4，中间通道数 = 输出通道数/4</li>
+</ul>
+<p><strong>实验发现</strong>：$b = 1$ (无压缩) 时模型表现最佳</p>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="resnext参数详解-2"><p><strong>分组卷积组数 $g$ 的权衡：</strong></p>
+<div class="note orange icon-padding flat"><i class="note-icon fas fa-balance-scale"></i><p><strong>参数与性能的权衡：</strong></p>
+<p><strong>优势：</strong></p>
+<ul>
+<li>更大的 $g$ 值减少参数量和计算量</li>
+<li>提高模型的参数效率</li>
+<li>增强特征的多样性</li>
+</ul>
+<p><strong>劣势：</strong></p>
+<ul>
+<li>可能限制网络的表达能力</li>
+<li>过度分组导致特征交互不足</li>
+</ul>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="resnext参数详解-3"><p><strong>AnyNet的超参数空间：</strong></p>
+<div class="note red icon-padding flat"><i class="note-icon fas fa-expand-arrows-alt"></i><p><strong>4×4+1 = 17个超参数：</strong></p>
+<p>对于4个阶段，每个阶段包含4个参数：</p>
+<ul>
+<li>瓶颈比率 $b_i$ (4个)</li>
+<li>分组卷积组数 $g_i$ (4个)  </li>
+<li>输出通道数 $w_i$ (4个)</li>
+<li>阶段深度 $d_i$ (4个)</li>
+<li>茎输出通道数 $w_0$ (1个)</li>
+</ul>
+<p><strong>搜索复杂度</strong>：当每个参数有 $k$ 种选择时，搜索空间为 $k^{17}$</p>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h2 id="1-3-AnyNet代码实现"><a href="#1-3-AnyNet代码实现" class="headerlink" title="1.3 AnyNet代码实现"></a>1.3 AnyNet代码实现</h2><div class="note info icon-padding flat"><i class="note-icon fas fa-code"></i><p><strong>模块化设计理念：</strong></p>
+<p>AnyNet采用高度模块化的设计，通过配置参数灵活构建不同规模的网络架构。实现中从<code>ResNet.py</code>导入<code>ResNeXtBlock</code>作为基本构建单元。</p>
+</div>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> Tensor</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> ResNet <span class="keyword">import</span> ResNeXtBlock</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@dataclass</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">StageConfig</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;网络主体中，每个 Stage 的配置&quot;&quot;&quot;</span></span><br><span class="line">    depth: <span class="built_in">int</span>  <span class="comment"># 块数量</span></span><br><span class="line">    groups: <span class="built_in">int</span>  <span class="comment"># 分组卷积块的组数</span></span><br><span class="line">    out_channels: <span class="built_in">int</span>  <span class="comment"># 输出通道数</span></span><br><span class="line">    bottleneck_ratio: <span class="built_in">int</span>  <span class="comment"># 瓶颈比率</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AnyNet</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, in_channels: <span class="built_in">int</span>, stem_out_channels: <span class="built_in">int</span>, num_classes: <span class="built_in">int</span>, arch_params: <span class="built_in">list</span>[StageConfig]</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :param in_channels: 输入数据的通道数</span></span><br><span class="line"><span class="string">        :param stem_out_channels: 网络 stem 部分的输出通道数</span></span><br><span class="line"><span class="string">        :param num_classes: 分类任务的类别数</span></span><br><span class="line"><span class="string">        :param arch_params: 网络主体的架构参数列表</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.stem = <span class="variable language_">self</span>._create_stem(in_channels, stem_out_channels)  <span class="comment"># 创建 Stem</span></span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.body = nn.Sequential()  <span class="comment"># 创建 Body</span></span><br><span class="line">        next_stage_in_channels = stem_out_channels</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> idx, stage_config <span class="keyword">in</span> <span class="built_in">enumerate</span>(arch_params):</span><br><span class="line">            <span class="variable language_">self</span>.body.append(</span><br><span class="line">                <span class="variable language_">self</span>._create_stage(next_stage_in_channels, stage_config.out_channels, depth=stage_config.depth,</span><br><span class="line">                                   groups=stage_config.groups, bottleneck_ratio=stage_config.bottleneck_ratio)</span><br><span class="line">            )</span><br><span class="line">            next_stage_in_channels = stage_config.out_channels</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.head = <span class="variable language_">self</span>._create_head(next_stage_in_channels, num_classes)  <span class="comment"># 创建 Head（分类头）</span></span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>._initialize_weights()</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_create_stem</span>(<span class="params">cls, in_channels: <span class="built_in">int</span>, out_channels: <span class="built_in">int</span></span>) -&gt; nn.Sequential:</span><br><span class="line">        stem = nn.Sequential(nn.Conv2d(in_channels, out_channels, kernel_size=<span class="number">3</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>, bias=<span class="literal">False</span>),</span><br><span class="line">                             nn.BatchNorm2d(out_channels), nn.ReLU(inplace=<span class="literal">True</span>))</span><br><span class="line">        <span class="keyword">return</span> stem</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_create_stage</span>(<span class="params">cls, in_channels: <span class="built_in">int</span>, out_channels: <span class="built_in">int</span>, depth: <span class="built_in">int</span>, groups: <span class="built_in">int</span>,</span></span><br><span class="line"><span class="params">                      bottleneck_ratio: <span class="built_in">int</span></span>) -&gt; nn.Sequential:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        创建由多个 ResNeXtBlock 块构成的 Stage</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        :param in_channels: 输入通道数</span></span><br><span class="line"><span class="string">        :param out_channels: 输出通道数</span></span><br><span class="line"><span class="string">        :param depth: 当前 Stage 的 ResNeXtBlock 块数</span></span><br><span class="line"><span class="string">        :param groups: 分组卷积的组数</span></span><br><span class="line"><span class="string">        :param bottleneck_ratio: 瓶颈比率</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        stage = nn.Sequential()</span><br><span class="line"></span><br><span class="line">        stage.append(  <span class="comment"># 第一个块</span></span><br><span class="line">            ResNeXtBlock(in_channels, out_channels, stride=<span class="number">2</span>, groups=groups, bottleneck_ratio=bottleneck_ratio)</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, depth):</span><br><span class="line">            stage.append(  <span class="comment"># 剩余的块</span></span><br><span class="line">                ResNeXtBlock(out_channels, out_channels, stride=<span class="number">1</span>, groups=groups, bottleneck_ratio=bottleneck_ratio)</span><br><span class="line">            )</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> stage</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_create_head</span>(<span class="params">cls, in_channels: <span class="built_in">int</span>, num_classes: <span class="built_in">int</span></span>) -&gt; nn.Sequential:</span><br><span class="line">        head = nn.Sequential(nn.AdaptiveAvgPool2d((<span class="number">1</span>, <span class="number">1</span>)), nn.Flatten(), nn.Linear(in_channels, num_classes))</span><br><span class="line">        <span class="keyword">return</span> head</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_initialize_weights</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">for</span> m <span class="keyword">in</span> <span class="variable language_">self</span>.modules():</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">isinstance</span>(m, nn.Conv2d):</span><br><span class="line">                nn.init.kaiming_normal_(m.weight, mode=<span class="string">&#x27;fan_out&#x27;</span>, nonlinearity=<span class="string">&#x27;relu&#x27;</span>)</span><br><span class="line">            <span class="keyword">elif</span> <span class="built_in">isinstance</span>(m, nn.BatchNorm2d):</span><br><span class="line">                nn.init.constant_(m.weight, <span class="number">1</span>)</span><br><span class="line">                nn.init.constant_(m.bias, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x: Tensor</span>) -&gt; Tensor:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :param x: 形状为 [B, C, H, W]</span></span><br><span class="line"><span class="string">        :return: 形状为 [B, num_classes]</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        x = <span class="variable language_">self</span>.stem(x)  <span class="comment"># Stem</span></span><br><span class="line">        x = <span class="variable language_">self</span>.body(x)  <span class="comment"># Body</span></span><br><span class="line">        x = <span class="variable language_">self</span>.head(x)  <span class="comment"># Head</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<details class="folding-tag" blue><summary> 查看AnyNet模型结构分析 </summary>
+              <div class='content'>
+              <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="keyword">from</span> torchinfo <span class="keyword">import</span> summary</span><br><span class="line"></span><br><span class="line">    params = [</span><br><span class="line">        StageConfig(depth=<span class="number">3</span>, groups=<span class="number">1</span>, out_channels=<span class="number">256</span>, bottleneck_ratio=<span class="number">4</span>),</span><br><span class="line">        StageConfig(depth=<span class="number">4</span>, groups=<span class="number">1</span>, out_channels=<span class="number">512</span>, bottleneck_ratio=<span class="number">4</span>),</span><br><span class="line">        StageConfig(depth=<span class="number">6</span>, groups=<span class="number">1</span>, out_channels=<span class="number">1024</span>, bottleneck_ratio=<span class="number">4</span>),</span><br><span class="line">        StageConfig(depth=<span class="number">3</span>, groups=<span class="number">1</span>, out_channels=<span class="number">2048</span>, bottleneck_ratio=<span class="number">4</span>),</span><br><span class="line">    ]</span><br><span class="line">    model = AnyNet(in_channels=<span class="number">3</span>, stem_out_channels=<span class="number">64</span>, num_classes=<span class="number">1000</span>, arch_params=params)</span><br><span class="line">    summary(model, input_size=(<span class="number">1</span>, <span class="number">3</span>, <span class="number">224</span>, <span class="number">224</span>))</span><br></pre></td></tr></table></figure><figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">===============================================================================================</span><br><span class="line">Layer (type:depth-idx)                        Output Shape              Param #</span><br><span class="line"><span class="attribute">===============================================================================================</span></span><br><span class="line"><span class="attribute">AnyNet                                        [1, 1000]                 --</span></span><br><span class="line"><span class="attribute">├─Sequential</span><span class="punctuation">:</span> <span class="string">1-1                             [1, 64, 112, 112]         --</span></span><br><span class="line"><span class="attribute">│    └─Conv2d</span><span class="punctuation">:</span> <span class="string">2-1                            [1, 64, 112, 112]         1,728</span></span><br><span class="line"><span class="attribute">│    └─BatchNorm2d</span><span class="punctuation">:</span> <span class="string">2-2                       [1, 64, 112, 112]         128</span></span><br><span class="line"><span class="attribute">│    └─ReLU</span><span class="punctuation">:</span> <span class="string">2-3                              [1, 64, 112, 112]         --</span></span><br><span class="line"><span class="attribute">├─Sequential</span><span class="punctuation">:</span> <span class="string">1-2                             [1, 2048, 7, 7]           --</span></span><br><span class="line"><span class="attribute">│    └─Sequential</span><span class="punctuation">:</span> <span class="string">2-4                        [1, 256, 56, 56]          --</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-1                 [1, 256, 56, 56]          74,112</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-2                 [1, 256, 56, 56]          70,400</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-3                 [1, 256, 56, 56]          70,400</span></span><br><span class="line"><span class="attribute">│    └─Sequential</span><span class="punctuation">:</span> <span class="string">2-5                        [1, 512, 28, 28]          --</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-4                 [1, 512, 28, 28]          377,856</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-5                 [1, 512, 28, 28]          280,064</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-6                 [1, 512, 28, 28]          280,064</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-7                 [1, 512, 28, 28]          280,064</span></span><br><span class="line"><span class="attribute">│    └─Sequential</span><span class="punctuation">:</span> <span class="string">2-6                        [1, 1024, 14, 14]         --</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-8                 [1, 1024, 14, 14]         1,509,376</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-9                 [1, 1024, 14, 14]         1,117,184</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-10                [1, 1024, 14, 14]         1,117,184</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-11                [1, 1024, 14, 14]         1,117,184</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-12                [1, 1024, 14, 14]         1,117,184</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-13                [1, 1024, 14, 14]         1,117,184</span></span><br><span class="line"><span class="attribute">│    └─Sequential</span><span class="punctuation">:</span> <span class="string">2-7                        [1, 2048, 7, 7]           --</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-14                [1, 2048, 7, 7]           6,033,408</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-15                [1, 2048, 7, 7]           4,462,592</span></span><br><span class="line"><span class="attribute">│    │    └─ResNeXtBlock</span><span class="punctuation">:</span> <span class="string">3-16                [1, 2048, 7, 7]           4,462,592</span></span><br><span class="line"><span class="attribute">├─Sequential</span><span class="punctuation">:</span> <span class="string">1-3                             [1, 1000]                 --</span></span><br><span class="line"><span class="attribute">│    └─AdaptiveAvgPool2d</span><span class="punctuation">:</span> <span class="string">2-8                 [1, 2048, 1, 1]           --</span></span><br><span class="line"><span class="attribute">│    └─Flatten</span><span class="punctuation">:</span> <span class="string">2-9                           [1, 2048]                 --</span></span><br><span class="line"><span class="attribute">│    └─Linear</span><span class="punctuation">:</span> <span class="string">2-10                           [1, 1000]                 2,049,000</span></span><br><span class="line"><span class="attribute">===============================================================================================</span></span><br><span class="line"><span class="attribute">Total params</span><span class="punctuation">:</span> <span class="string">25,537,704</span></span><br><span class="line"><span class="attribute">Trainable params</span><span class="punctuation">:</span> <span class="string">25,537,704</span></span><br><span class="line"><span class="attribute">Non-trainable params</span><span class="punctuation">:</span> <span class="string">0</span></span><br><span class="line"><span class="attribute">Total mult-adds (Units.GIGABYTES)</span><span class="punctuation">:</span> <span class="string">4.03</span></span><br><span class="line"><span class="attribute">===============================================================================================</span></span><br><span class="line"><span class="attribute">Input size (MB)</span><span class="punctuation">:</span> <span class="string">0.60</span></span><br><span class="line"><span class="attribute">Forward/backward pass size (MB)</span><span class="punctuation">:</span> <span class="string">181.04</span></span><br><span class="line"><span class="attribute">Params size (MB)</span><span class="punctuation">:</span> <span class="string">102.15</span></span><br><span class="line"><span class="attribute">Estimated Total Size (MB)</span><span class="punctuation">:</span> <span class="string">283.80</span></span><br><span class="line">===============================================================================================</span><br></pre></td></tr></table></figure>
+              </div>
+            </details>
+<hr>
+<h1 id="2-网络设计空间的分布和参数分析"><a href="#2-网络设计空间的分布和参数分析" class="headerlink" title="2. 网络设计空间的分布和参数分析"></a>2. 网络设计空间的分布和参数分析</h1><h2 id="2-1-设计空间复杂度问题"><a href="#2-1-设计空间复杂度问题" class="headerlink" title="2.1 设计空间复杂度问题"></a>2.1 设计空间复杂度问题</h2><div class="note danger icon-padding flat"><i class="note-icon fas fa-exclamation-triangle"></i><p><strong>搜索空间爆炸问题：</strong></p>
+<p>AnyNet的17个超参数带来了巨大的搜索挑战：</p>
+<ul>
+<li>4个阶段 × 4类参数 + 1个茎参数 = 17个超参数</li>
+<li>当每个参数有 $k$ 种选择时，搜索空间达到 $k^{17}$</li>
+<li>NAS方法即使找到最优单一网络，也难以获得通用设计洞察</li>
+<li>设计空间变化时需要重新进行昂贵的搜索过程</li>
+</ul>
+</div>
+<h2 id="2-2-NDS方法的核心假设"><a href="#2-2-NDS方法的核心假设" class="headerlink" title="2.2 NDS方法的核心假设"></a>2.2 NDS方法的核心假设</h2><div class="note success icon-padding flat"><i class="note-icon fas fa-lightbulb"></i><p><strong>网络设计空间方法的四个关键假设：</strong></p>
+<p>NDS方法基于以下理论假设来简化复杂的架构搜索问题：</p>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>普遍设计原则</strong>：存在通用的设计原则能使大多数网络获得良好性能</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>早期评估有效性</strong>：早期训练结果能可靠评估网络性能，无需完全收敛</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>规模迁移性</strong>：小型网络的设计洞察可迁移到大型网络</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>参数独立性</strong>：网络参数间交互效应较小，可独立优化</p>
+            </div></div>
+<h2 id="2-3-累积分布函数-CDF-分析"><a href="#2-3-累积分布函数-CDF-分析" class="headerlink" title="2.3 累积分布函数(CDF)分析"></a>2.3 累积分布函数(CDF)分析</h2><div class="note info icon-padding flat"><i class="note-icon fas fa-chart-area"></i><p><strong>CDF评估方法：</strong></p>
+<p>NDS方法使用累积分布函数来评估设计空间的质量：</p>
+<script type="math/tex; mode=display">F(e) = P(\text{error} \leq e) = \int_{-\infty}^{e} p(\text{error}) d\text{error}</script><p>其中 $e$ 为错误率阈值，$F(e)$ 表示网络错误率不超过阈值的概率。</p>
+</div>
+<div class="tabs" id="cdf分析方法"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#cdf分析方法-1">理论基础</button></li><li class="tab"><button type="button" data-href="#cdf分析方法-2">可视化解读</button></li><li class="tab"><button type="button" data-href="#cdf分析方法-3">采样策略</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="cdf分析方法-1"><p><strong>CDF的数学表示：</strong></p>
+<p>从设计空间分布 $\mathcal{D}$ 中采样 $n$ 个网络，错误率为 $e_1, e_2, \ldots, e_n$：</p>
+<script type="math/tex; mode=display">\hat{F}(e) = \frac{1}{n} \sum_{i=1}^{n} \mathbb{I}(e_i \leq e)</script><p>其中 $\mathbb{I}(\cdot)$ 为指示函数：</p>
+<ul>
+<li>当 $e_i \leq e$ 时，$\mathbb{I}(e_i \leq e) = 1$</li>
+<li>当 $e_i &gt; e$ 时，$\mathbb{I}(e_i \leq e) = 0$</li>
+</ul><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="cdf分析方法-2"><p><strong>CDF曲线的解读规则：</strong></p>
+<div class="note orange icon-padding flat"><i class="note-icon fas fa-chart-line"></i><p><strong>坐标轴含义：</strong></p>
+<ul>
+<li><strong>横轴</strong>：错误率阈值 (0-100%)</li>
+<li><strong>纵轴</strong>：CDF值，即错误率不超过阈值的概率 (0-1)</li>
+</ul>
+<p><strong>性能比较原则：</strong></p>
+<ul>
+<li>CDF曲线位置越高，设计空间性能越好</li>
+<li>曲线A在曲线B上方，说明设计空间A优于B</li>
+<li>理想情况下CDF应快速上升并保持高值</li>
+</ul>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="cdf分析方法-3"><p><strong>网络采样与评估：</strong></p>
+<div class="note purple icon-padding flat"><i class="note-icon fas fa-random"></i><p><strong>采样策略：</strong></p>
+<ol>
+<li><strong>均匀分布采样</strong>：确保全面覆盖设计空间</li>
+<li><strong>早期停止训练</strong>：节省计算资源的同时保证评估有效性</li>
+<li><strong>小规模验证</strong>：在小型网络上验证设计原则</li>
+<li><strong>迁移验证</strong>：将发现的原则应用到大型网络</li>
+</ol>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h2 id="2-4-渐进式约束实验"><a href="#2-4-渐进式约束实验" class="headerlink" title="2.4 渐进式约束实验"></a>2.4 渐进式约束实验</h2><div class="img-wrap"><div class="img-bg"><img class="img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/article/CNN 网络架构的设计/1747559170296-8ca5c7e0-c3f3-4eff-a294-4ec91781d7fb.jpeg" alt="NDS方法的渐进式约束实验结果"/></div><span class="image-caption">NDS方法的渐进式约束实验结果</span></div>
+<p>NDS方法通过逐步引入参数约束，比较约束前后的CDF曲线变化来确定设计原则的重要性：</p>
+<div class="tabs" id="实验阶段"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#实验阶段-1">阶段1：瓶颈比率统一</button></li><li class="tab"><button type="button" data-href="#实验阶段-2">阶段2：分组数统一</button></li><li class="tab"><button type="button" data-href="#实验阶段-3">阶段3：通道数模式</button></li><li class="tab"><button type="button" data-href="#实验阶段-4">阶段4：深度模式</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="实验阶段-1"><p><strong>AnyNetXA → AnyNetXB：统一瓶颈比率</strong></p>
+<div class="note blue icon-padding flat"><i class="note-icon fas fa-compress-alt"></i><p><strong>实验设计：</strong></p>
+<ul>
+<li>将4个阶段的瓶颈比率 $b$ 统一为相同值</li>
+<li>从原有的独立设置改为全局共享</li>
+<li>对比统一前后的CDF曲线性能</li>
+</ul>
+<p><strong>实验结果：</strong></p>
+<ul>
+<li>网络性能无显著变化</li>
+<li>参数空间大幅简化</li>
+<li>证明瓶颈比率可以全局统一</li>
+</ul>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="实验阶段-2"><p><strong>AnyNetXB → AnyNetXC：统一分组卷积组数</strong></p>
+<div class="note green icon-padding flat"><i class="note-icon fas fa-layer-group"></i><p><strong>实验设计：</strong></p>
+<ul>
+<li>在瓶颈比率统一基础上，进一步统一分组卷积组数 $g$</li>
+<li>4个阶段使用相同的分组数</li>
+<li>继续观察CDF曲线变化</li>
+</ul>
+<p><strong>实验结果：</strong></p>
+<ul>
+<li>网络性能仍然保持稳定</li>
+<li>设计空间进一步简化</li>
+<li>验证了分组数统一的有效性</li>
+</ul>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="实验阶段-3"><p><strong>AnyNetXC：通道数变化模式比较</strong></p>
+<div class="note orange icon-padding flat"><i class="note-icon fas fa-arrow-up"></i><p><strong>实验设计：</strong></p>
+<ul>
+<li>比较通道数的三种变化模式：递增、不变、递减</li>
+<li>评估不同模式对网络性能的影响</li>
+<li>确定最优的通道数变化策略</li>
+</ul>
+<p><strong>实验结果：</strong></p>
+<ul>
+<li><strong>递增模式</strong>表现最佳 ($w_1 \leq w_2 \leq w_3 \leq w_4$)</li>
+<li>不变和递减模式性能明显下降</li>
+<li>渐进式通道扩展符合CNN特征提取规律</li>
+</ul>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="实验阶段-4"><p><strong>AnyNetXD：阶段深度变化模式</strong></p>
+<div class="note purple icon-padding flat"><i class="note-icon fas fa-arrows-alt-v"></i><p><strong>实验设计：</strong></p>
+<ul>
+<li>基于最佳通道数模式，比较阶段深度的变化模式</li>
+<li>测试深度递增、不变、递减的效果</li>
+<li>确定最优的深度分配策略</li>
+</ul>
+<p><strong>实验结果：</strong></p>
+<ul>
+<li><strong>深度递增</strong>模式性能最佳 ($d_1 \leq d_2 \leq d_3 \leq d_4$)</li>
+<li>后期阶段需要更多层来处理复杂特征</li>
+<li>与通道数递增形成良好配合</li>
+</ul>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h2 id="2-5-CNN架构设计原则"><a href="#2-5-CNN架构设计原则" class="headerlink" title="2.5 CNN架构设计原则"></a>2.5 CNN架构设计原则</h2><div class="note success icon-padding flat"><i class="note-icon fas fa-check-circle"></i><p><strong>基于实验得出的CNN网络架构设计重要原则：</strong></p>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>参数统一原则</strong>：各阶段共享相同的瓶颈比率 $b$ 和分组卷积组数 $g$，简化设计空间而不损失性能</p>
+            </div>
+
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>渐进扩展原则</strong>：通道数 $w_i$ 和阶段深度 $d_i$ 应随网络深入而递增，即 $w_1 \leq w_2 \leq w_3 \leq w_4$ 和 $d_1 \leq d_2 \leq d_3 \leq d_4$</p>
+            </div>
+
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>简约优先原则</strong>：在保持性能的前提下，优先选择参数更少、结构更简单的设计</p>
+            </div></div>
+<div class="note warning icon-padding flat"><i class="note-icon fas fa-lightbulb"></i><p><strong>设计原则的理论基础：</strong></p>
+<p>这些原则反映了CNN特征提取的本质规律：</p>
+<ul>
+<li>早期阶段处理低级特征，需要较少的计算资源</li>
+<li>后期阶段处理高级抽象特征，需要更多的通道和层数</li>
+<li>统一的超参数减少了设计复杂度，提高了可解释性</li>
+</ul>
+</div>
+<hr>
+<h1 id="3-RegNet：规则化的网络设计"><a href="#3-RegNet：规则化的网络设计" class="headerlink" title="3. RegNet：规则化的网络设计"></a>3. RegNet：规则化的网络设计</h1><h2 id="3-1-RegNet设计理念"><a href="#3-1-RegNet设计理念" class="headerlink" title="3.1 RegNet设计理念"></a>3.1 RegNet设计理念</h2><div class="note primary icon-padding flat"><i class="note-icon fas fa-ruler"></i><p><strong>RegNet的核心设计原则：</strong></p>
+<p>基于NDS方法得出的设计原则，RegNet采用规则化的网络架构：</p>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>全局统一</strong>：所有阶段共享相同的瓶颈比率 $b$ 和分组卷积组数 $g$</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>渐进增长</strong>：网络宽度(通道数)和深度(块数)随阶段递增</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>线性规律</strong>：通道数遵循线性增长模式</p>
+            </div></div>
+<h2 id="3-2-网络宽度的线性增长模型"><a href="#3-2-网络宽度的线性增长模型" class="headerlink" title="3.2 网络宽度的线性增长模型"></a>3.2 网络宽度的线性增长模型</h2><div class="note info icon-padding flat"><i class="note-icon fas fa-chart-line"></i><p><strong>理想的通道数增长模式：</strong></p>
+<p>RegNet假设理想的网络宽度应基于初始通道数 $w_0$ 随块索引 $j$ 以速率 $w_a$ 线性增加：</p>
+<script type="math/tex; mode=display">w_j = w_0 + w_a \cdot j</script><p>其中：</p>
+<ul>
+<li>$w_0$：初始通道数</li>
+<li>$w_a$：通道增长速率  </li>
+<li>$j$：块的全局索引</li>
+</ul>
+</div>
+<div class="tabs" id="线性增长模型"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#线性增长模型-1">理论模型</button></li><li class="tab"><button type="button" data-href="#线性增长模型-2">实际应用</button></li><li class="tab"><button type="button" data-href="#线性增长模型-3">与传统方法对比</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="线性增长模型-1"><p><strong>线性增长的理论基础：</strong></p>
+<div class="note blue icon-padding flat"><i class="note-icon fas fa-line-chart"></i><p><strong>分段线性拟合：</strong></p>
+<ul>
+<li>由于同阶段内块共享通道数，线性变化实际上是分段的</li>
+<li>需要在多个阶段中拟合线性关系</li>
+<li>通过优化拟合误差确定最佳的阶段划分</li>
+</ul>
+<p><strong>优势：</strong></p>
+<ul>
+<li>提供了简单而有效的设计规则</li>
+<li>减少了超参数搜索空间</li>
+<li>便于不同规模网络的系统化设计</li>
+</ul>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="线性增长模型-2"><p><strong>RegNetX系列网络：</strong></p>
+<div class="note orange icon-padding flat"><i class="note-icon fas fa-network-wired"></i><p><strong>RegNetX命名规则：</strong></p>
+<ul>
+<li>RegNetX32：主体起始通道数为32</li>
+<li>RegNetX64：主体起始通道数为64  </li>
+<li>数字表示网络规模和复杂度</li>
+</ul>
+<p><strong>设计特点：</strong></p>
+<ul>
+<li>基于规则模式(regular patterns)的设计理念</li>
+<li>通过继承AnyNet实现模块化构建</li>
+<li>支持灵活的规模调整</li>
+</ul>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="线性增长模型-3"><p><strong>RegNet vs 传统设计：</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>方面</th>
+<th>传统手工设计</th>
+<th>NAS方法</th>
+<th>RegNet方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>设计复杂度</td>
+<td>高</td>
+<td>极高</td>
+<td>中等</td>
+</tr>
+<tr>
+<td>计算成本</td>
+<td>低</td>
+<td>极高</td>
+<td>中等</td>
+</tr>
+<tr>
+<td>通用性</td>
+<td>低</td>
+<td>低</td>
+<td>高</td>
+</tr>
+<tr>
+<td>可解释性</td>
+<td>中等</td>
+<td>低</td>
+<td>高</td>
+</tr>
+<tr>
+<td>设计洞察</td>
+<td>有限</td>
+<td>有限</td>
+<td>丰富</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="note success icon-padding flat"><i class="note-icon fas fa-balance-scale"></i><p>RegNet在设计复杂度、计算成本和通用性之间实现了良好的平衡。</p>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<h2 id="3-3-RegNetX32实现"><a href="#3-3-RegNetX32实现" class="headerlink" title="3.3 RegNetX32实现"></a>3.3 RegNetX32实现</h2><div class="note info icon-padding flat"><i class="note-icon fas fa-code"></i><p><strong>RegNetX32网络配置：</strong></p>
+<p>RegNetX32作为RegNet系列的典型代表，通过继承AnyNet实现简洁的网络构建。</p>
+</div>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">RegNetX32</span>(<span class="title class_ inherited__">AnyNet</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, in_channels, num_classes: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__(</span><br><span class="line">            in_channels=in_channels, stem_out_channels=<span class="number">32</span>, num_classes=num_classes,</span><br><span class="line">            arch_params=[</span><br><span class="line">                StageConfig(depth=<span class="number">4</span>, groups=<span class="number">16</span>, out_channels=<span class="number">32</span>, bottleneck_ratio=<span class="number">1</span>),</span><br><span class="line">                StageConfig(depth=<span class="number">6</span>, groups=<span class="number">16</span>, out_channels=<span class="number">80</span>, bottleneck_ratio=<span class="number">1</span>)</span><br><span class="line">            ]</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+<details class="folding-tag" green><summary> 查看RegNetX32模型结构分析 </summary>
+              <div class='content'>
+              <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="keyword">from</span> torchinfo <span class="keyword">import</span> summary</span><br><span class="line"></span><br><span class="line">    model = RegNetX32(in_channels=<span class="number">1</span>, num_classes=<span class="number">10</span>)</span><br><span class="line">    summary(model, input_size=(<span class="number">1</span>, <span class="number">1</span>, <span class="number">96</span>, <span class="number">96</span>))</span><br></pre></td></tr></table></figure><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">===============================================================================================</span><br><span class="line">Layer (type:depth-idx)                        Output Shape              Param #</span><br><span class="line">===============================================================================================</span><br><span class="line">RegNetX32                                     [1, 10]                   --</span><br><span class="line">├─Sequential: 1-1                             [1, 32, 48, 48]           --</span><br><span class="line">│    └─Conv2d: 2-1                            [1, 32, 48, 48]           288</span><br><span class="line">│    └─BatchNorm2d: 2-2                       [1, 32, 48, 48]           64</span><br><span class="line">│    └─ReLU: 2-3                              [1, 32, 48, 48]           --</span><br><span class="line">├─Sequential: 1-2                             [1, 80, 12, 12]           --</span><br><span class="line">│    └─Sequential: 2-4                        [1, 32, 24, 24]           --</span><br><span class="line">│    │    └─ResNeXtBlock: 3-1                 [1, 32, 24, 24]           2,304</span><br><span class="line">│    │    └─ResNeXtBlock: 3-2                 [1, 32, 24, 24]           1,280</span><br><span class="line">│    │    └─ResNeXtBlock: 3-3                 [1, 32, 24, 24]           1,280</span><br><span class="line">│    │    └─ResNeXtBlock: 3-4                 [1, 32, 24, 24]           1,280</span><br><span class="line">│    └─Sequential: 2-5                        [1, 80, 12, 12]           --</span><br><span class="line">│    │    └─ResNeXtBlock: 3-5                 [1, 80, 12, 12]           7,824</span><br><span class="line">│    │    └─ResNeXtBlock: 3-6                 [1, 80, 12, 12]           7,520</span><br><span class="line">│    │    └─ResNeXtBlock: 3-7                 [1, 80, 12, 12]           7,520</span><br><span class="line">│    │    └─ResNeXtBlock: 3-8                 [1, 80, 12, 12]           7,520</span><br><span class="line">│    │    └─ResNeXtBlock: 3-9                 [1, 80, 12, 12]           7,520</span><br><span class="line">│    │    └─ResNeXtBlock: 3-10                [1, 80, 12, 12]           7,520</span><br><span class="line">├─Sequential: 1-3                             [1, 10]                   --</span><br><span class="line">│    └─AdaptiveAvgPool2d: 2-6                 [1, 80, 1, 1]             --</span><br><span class="line">│    └─Flatten: 2-7                           [1, 80]                   --</span><br><span class="line">│    └─Linear: 2-8                            [1, 10]                   810</span><br><span class="line">===============================================================================================</span><br><span class="line">Total params: 52,730</span><br><span class="line">Trainable params: 52,730</span><br><span class="line">Non-trainable params: 0</span><br><span class="line">Total mult-adds (Units.MEGABYTES): 10.19</span><br><span class="line">===============================================================================================</span><br><span class="line">Input size (MB): 0.04</span><br><span class="line">Forward/backward pass size (MB): 6.49</span><br><span class="line">Params size (MB): 0.21</span><br><span class="line"><span class="section">Estimated Total Size (MB): 6.74</span></span><br><span class="line"><span class="section">===============================================================================================</span></span><br></pre></td></tr></table></figure>
+              </div>
+            </details>
+<h2 id="3-4-RegNetX32参数分析"><a href="#3-4-RegNetX32参数分析" class="headerlink" title="3.4 RegNetX32参数分析"></a>3.4 RegNetX32参数分析</h2><div class="note blue icon-padding flat"><i class="note-icon fas fa-info-circle"></i><p><strong>RegNetX32的具体配置参数：</strong></p>
+<p>基于NDS原则设计的RegNetX32具有以下参数配置：</p>
+<ul>
+<li>茎输出通道数：$w_0 = 32$</li>
+<li>瓶颈比率：$b = 1$ (无压缩)</li>
+<li>分组卷积组数：$g = 16$</li>
+<li>阶段深度：$d_1 = 4, d_2 = 6$ (递增)</li>
+<li>阶段通道数：$w_1 = 32, w_2 = 80$ (递增)</li>
+</ul>
+</div>
+<div class="note success icon-padding flat"><i class="note-icon fas fa-chart-bar"></i><p><strong>模型效率分析：</strong></p>
+<ul>
+<li><strong>总参数量</strong>：52,730 (约53K)</li>
+<li><strong>计算量</strong>：10.19 MMAC</li>
+<li><strong>内存占用</strong>：6.74 MB</li>
+<li><strong>参数效率</strong>：相比传统CNN大幅减少参数量</li>
+</ul>
+</div>
+<h2 id="3-5-RegNetY：注意力增强版本"><a href="#3-5-RegNetY：注意力增强版本" class="headerlink" title="3.5 RegNetY：注意力增强版本"></a>3.5 RegNetY：注意力增强版本</h2><div class="note primary icon-padding flat"><i class="note-icon fas fa-eye"></i><p><strong>RegNetY的创新点：</strong></p>
+<p>RegNetY是RegNetX的扩展变体，在保持RegNet设计原则的基础上引入注意力机制：</p>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>SE模块集成</strong>：引入挤压-激励(Squeeze-and-Excitation)注意力模块</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>自适应加权</strong>：实现对各通道特征的自适应重要性加权</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>性能提升</strong>：在不显著增加计算成本的情况下提升模型性能</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>原则保持</strong>：CNN核心设计原则在RegNetY中依然适用</p>
+            </div></div>
+<div class="tabs" id="regnety特性"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#regnety特性-1">SE模块原理</button></li><li class="tab"><button type="button" data-href="#regnety特性-2">性能对比</button></li><li class="tab"><button type="button" data-href="#regnety特性-3">适用场景</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="regnety特性-1"><p><strong>挤压-激励(SE)模块：</strong></p>
+<div class="note green icon-padding flat"><i class="note-icon fas fa-compress-arrows-alt"></i><p><strong>SE模块工作流程：</strong></p>
+<ol>
+<li><strong>Squeeze</strong>：全局平均池化压缩空间维度</li>
+<li><strong>Excitation</strong>：两层全连接网络学习通道重要性</li>
+<li><strong>Scale</strong>：将学习到的权重应用到原始特征图</li>
+</ol>
+<p><strong>数学表示：</strong></p>
+<script type="math/tex; mode=display">\text{SE}(X) = X \odot \sigma(W_2 \delta(W_1 \text{GAP}(X)))</script><p>其中 $\odot$ 表示逐元素乘法，$\sigma$ 为Sigmoid激活函数</p>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="regnety特性-2"><p><strong>RegNetX vs RegNetY性能对比：</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>RegNetX</th>
+<th>RegNetY</th>
+<th>提升</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>参数量</td>
+<td>基准</td>
+<td>+5~10%</td>
+<td>小幅增加</td>
+</tr>
+<tr>
+<td>计算量</td>
+<td>基准</td>
+<td>+2~5%</td>
+<td>微量增加</td>
+</tr>
+<tr>
+<td>准确率</td>
+<td>基准</td>
+<td>+1~3%</td>
+<td>显著提升</td>
+</tr>
+<tr>
+<td>推理速度</td>
+<td>基准</td>
+<td>-2~5%</td>
+<td>轻微下降</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="note orange icon-padding flat"><i class="note-icon fas fa-trophy"></i><p>RegNetY在准确率和效率之间实现了良好的权衡，适合对精度有更高要求的应用场景。</p>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="regnety特性-3"><p><strong>RegNetX vs RegNetY选择指南：</strong></p>
+<div class="note purple icon-padding flat"><i class="note-icon fas fa-decision-making"></i><p><strong>选择RegNetX的情况：</strong></p>
+<ul>
+<li>计算资源极度受限</li>
+<li>推理速度要求很高</li>
+<li>参数量预算严格</li>
+<li>边缘设备部署</li>
+</ul>
+<p><strong>选择RegNetY的情况：</strong></p>
+<ul>
+<li>对准确率有更高要求</li>
+<li>计算资源相对充足</li>
+<li>可以接受轻微的性能开销</li>
+<li>服务器端或云端部署</li>
+</ul>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<hr>
+<h1 id="4-模型训练与性能评估"><a href="#4-模型训练与性能评估" class="headerlink" title="4. 模型训练与性能评估"></a>4. 模型训练与性能评估</h1><h2 id="4-1-训练配置"><a href="#4-1-训练配置" class="headerlink" title="4.1 训练配置"></a>4.1 训练配置</h2><div class="note info icon-padding flat"><i class="note-icon fas fa-cogs"></i><p><strong>实验设置：</strong></p>
+<p>继续使用<code>training_tools.py</code>中的工具对RegNetX32网络进行训练评估：</p>
+<ul>
+<li><strong>数据集</strong>：Fashion-MNIST (调整到96×96分辨率)</li>
+<li><strong>批次大小</strong>：128</li>
+<li><strong>训练轮数</strong>：10轮  </li>
+<li><strong>学习率</strong>：0.05</li>
+<li><strong>优化器</strong>：SGD</li>
+</ul>
+</div>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="keyword">import</span> torch</span><br><span class="line">    <span class="keyword">from</span> torch <span class="keyword">import</span> optim</span><br><span class="line"></span><br><span class="line">    <span class="keyword">from</span> training_tools <span class="keyword">import</span> fashionMNIST_loader, Trainer</span><br><span class="line"></span><br><span class="line">    BATCH_SIZE = <span class="number">128</span></span><br><span class="line">    EPOCHS_NUM = <span class="number">10</span></span><br><span class="line">    LEARNING_RATE = <span class="number">0.05</span></span><br><span class="line"></span><br><span class="line">    model = RegNetX32(in_channels=<span class="number">1</span>, num_classes=<span class="number">10</span>)</span><br><span class="line">    train_loader, test_loader = fashionMNIST_loader(BATCH_SIZE, resize=<span class="number">96</span>)</span><br><span class="line">    criterion = nn.CrossEntropyLoss()</span><br><span class="line">    optimizer = optim.SGD(model.parameters(), LEARNING_RATE)</span><br><span class="line">    platform = torch.device(<span class="string">&#x27;cuda&#x27;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&#x27;cpu&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Trainer(model, train_loader, test_loader, criterion, optimizer, platform) <span class="keyword">as</span> trainer:</span><br><span class="line">        trainer.train(EPOCHS_NUM)</span><br></pre></td></tr></table></figure>
+<h2 id="4-2-训练结果分析"><a href="#4-2-训练结果分析" class="headerlink" title="4.2 训练结果分析"></a>4.2 训练结果分析</h2><details class="folding-tag" blue><summary> 查看RegNetX32完整训练过程 </summary>
+              <div class='content'>
+              <figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">第 <span class="number">001</span>/<span class="number">10</span> 轮，训练损失：<span class="number">0.9418</span>，训练精度：<span class="number">66.48</span><span class="meta">%</span>，测试损失：<span class="number">4.7452</span>，测试精度：<span class="number">21.97</span><span class="meta">%</span></span><br><span class="line">第 <span class="number">002</span>/<span class="number">10</span> 轮，训练损失：<span class="number">0.4853</span>，训练精度：<span class="number">82.67</span><span class="meta">%</span>，测试损失：<span class="number">1.0351</span>，测试精度：<span class="number">65.65</span><span class="meta">%</span></span><br><span class="line">第 <span class="number">003</span>/<span class="number">10</span> 轮，训练损失：<span class="number">0.3922</span>，训练精度：<span class="number">86.08</span><span class="meta">%</span>，测试损失：<span class="number">1.5781</span>，测试精度：<span class="number">56.69</span><span class="meta">%</span></span><br><span class="line">第 <span class="number">004</span>/<span class="number">10</span> 轮，训练损失：<span class="number">0.3465</span>，训练精度：<span class="number">87.70</span><span class="meta">%</span>，测试损失：<span class="number">1.8860</span>，测试精度：<span class="number">55.66</span><span class="meta">%</span></span><br><span class="line">第 <span class="number">005</span>/<span class="number">10</span> 轮，训练损失：<span class="number">0.3207</span>，训练精度：<span class="number">88.58</span><span class="meta">%</span>，测试损失：<span class="number">0.5745</span>，测试精度：<span class="number">79.57</span><span class="meta">%</span></span><br><span class="line">第 <span class="number">006</span>/<span class="number">10</span> 轮，训练损失：<span class="number">0.3003</span>，训练精度：<span class="number">89.22</span><span class="meta">%</span>，测试损失：<span class="number">0.3773</span>，测试精度：<span class="number">87.31</span><span class="meta">%</span></span><br><span class="line">第 <span class="number">007</span>/<span class="number">10</span> 轮，训练损失：<span class="number">0.2861</span>，训练精度：<span class="number">89.77</span><span class="meta">%</span>，测试损失：<span class="number">0.6627</span>，测试精度：<span class="number">78.40</span><span class="meta">%</span></span><br><span class="line">第 <span class="number">008</span>/<span class="number">10</span> 轮，训练损失：<span class="number">0.2742</span>，训练精度：<span class="number">90.25</span><span class="meta">%</span>，测试损失：<span class="number">0.3845</span>，测试精度：<span class="number">86.95</span><span class="meta">%</span></span><br><span class="line">第 <span class="number">009</span>/<span class="number">10</span> 轮，训练损失：<span class="number">0.2613</span>，训练精度：<span class="number">90.56</span><span class="meta">%</span>，测试损失：<span class="number">0.3343</span>，测试精度：<span class="number">88.11</span><span class="meta">%</span></span><br><span class="line">第 <span class="number">010</span>/<span class="number">10</span> 轮，训练损失：<span class="number">0.2536</span>，训练精度：<span class="number">90.89</span><span class="meta">%</span>，测试损失：<span class="number">0.3222</span>，测试精度：<span class="number">88.16</span><span class="meta">%</span></span><br></pre></td></tr></table></figure>
+              </div>
+            </details>
+<div class="img-wrap"><div class="img-bg"><img class="img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/article/CNN 网络架构的设计/1747570249238-847b7ade-41ed-47b8-9dbf-7c22e82426c2.png" alt="RegNetX32训练过程可视化"/></div><span class="image-caption">RegNetX32训练过程可视化</span></div>
+<div class="tabs" id="性能分析"><ul class="nav-tabs"><li class="tab active"><button type="button" data-href="#性能分析-1">训练特征</button></li><li class="tab"><button type="button" data-href="#性能分析-2">架构对比</button></li><li class="tab"><button type="button" data-href="#性能分析-3">实际应用</button></li></ul><div class="tab-contents"><div class="tab-item-content active" id="性能分析-1"><p><strong>RegNetX32训练表现：</strong></p>
+<div class="note success icon-padding flat"><i class="note-icon fas fa-chart-line"></i><p><strong>收敛性能：</strong></p>
+<ul>
+<li>最终训练精度：90.89%</li>
+<li>最佳测试精度：88.16% (第10轮)</li>
+<li>训练稳定性：相对稳定，波动较小</li>
+<li>参数效率：仅53K参数实现良好性能</li>
+</ul>
+</div>
+
+<div class="note orange icon-padding flat"><i class="note-icon fas fa-balance-scale"></i><p><strong>性能特点：</strong></p>
+<ul>
+<li>训练精度稳步提升，无明显过拟合</li>
+<li>测试精度在中后期趋于稳定</li>
+<li>损失函数收敛良好</li>
+<li>体现了RegNet设计的有效性</li>
+</ul>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="性能分析-2"><p><strong>与其他CNN架构的对比：</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>参数量</th>
+<th>最佳测试精度</th>
+<th>训练稳定性</th>
+<th>设计复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LeNet</td>
+<td>~60K</td>
+<td>~85%</td>
+<td>高</td>
+<td>低</td>
+</tr>
+<tr>
+<td>AlexNet</td>
+<td>~60M</td>
+<td>~88%</td>
+<td>中</td>
+<td>中</td>
+</tr>
+<tr>
+<td>VGG</td>
+<td>~138M</td>
+<td>~90%</td>
+<td>中</td>
+<td>中</td>
+</tr>
+<tr>
+<td>ResNet</td>
+<td>~25M</td>
+<td>~93%</td>
+<td>高</td>
+<td>高</td>
+</tr>
+<tr>
+<td><strong>RegNetX32</strong></td>
+<td><strong>53K</strong></td>
+<td><strong>88.16%</strong></td>
+<td><strong>高</strong></td>
+<td><strong>中</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="note blue icon-padding flat"><i class="note-icon fas fa-star"></i><p><strong>RegNet优势：</strong></p>
+<ul>
+<li>极高的参数效率</li>
+<li>基于系统化设计原则</li>
+<li>训练稳定性好</li>
+<li>易于扩展和调整</li>
+</ul>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div><div class="tab-item-content" id="性能分析-3"><p><strong>RegNet的应用价值：</strong></p>
+<div class="note green icon-padding flat"><i class="note-icon fas fa-rocket"></i><p><strong>适用场景：</strong></p>
+<ul>
+<li>移动端和边缘设备部署</li>
+<li>参数预算严格的应用</li>
+<li>需要快速原型设计的项目</li>
+<li>教学和研究用途</li>
+</ul>
+<p><strong>技术优势：</strong></p>
+<ul>
+<li>系统化的设计方法论</li>
+<li>可解释的设计原则</li>
+<li>良好的性能-效率权衡</li>
+<li>为未来架构设计提供指导</li>
+</ul>
+</div><button type="button" class="tab-to-top" aria-label="scroll to top"><i class="fas fa-arrow-up"></i></button></div></div></div>
+<hr>
+<h1 id="5-总结与展望"><a href="#5-总结与展望" class="headerlink" title="5. 总结与展望"></a>5. 总结与展望</h1><h2 id="5-1-CNN架构设计的发展历程"><a href="#5-1-CNN架构设计的发展历程" class="headerlink" title="5.1 CNN架构设计的发展历程"></a>5.1 CNN架构设计的发展历程</h2><div class="note success icon-padding flat"><i class="note-icon fas fa-timeline"></i><p><strong>从手工设计到系统化方法的演进：</strong></p>
+<p>本文深入探讨了CNN网络架构设计从直觉驱动到系统化方法的重要转变：</p>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>手工设计时代</strong>：AlexNet、VGG、ResNet等经典架构的启发式设计</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>NAS技术</strong>：自动化搜索但计算成本极高</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>NDS方法</strong>：结合手工洞察与系统分析的高效解决方案</p>
+            </div>
+<div class='checkbox checked'><input type="checkbox" checked="checked"/>
+            <p><strong>RegNet系列</strong>：基于设计原则的规则化网络架构</p>
+            </div></div>
+<h2 id="5-2-核心贡献与设计原则"><a href="#5-2-核心贡献与设计原则" class="headerlink" title="5.2 核心贡献与设计原则"></a>5.2 核心贡献与设计原则</h2><div class="note primary icon-padding flat"><i class="note-icon fas fa-key"></i><p><strong>NDS方法的重要发现：</strong></p>
+<ol>
+<li><strong>参数统一原则</strong>：各阶段可共享瓶颈比率和分组卷积组数</li>
+<li><strong>渐进扩展原则</strong>：通道数和深度应随网络深入递增  </li>
+<li><strong>简约优先原则</strong>：在保持性能前提下优选简单设计</li>
+<li><strong>可扩展性</strong>：设计原则在不同规模网络中普遍适用</li>
+</ol>
+</div>
+<h2 id="5-3-技术影响与未来展望"><a href="#5-3-技术影响与未来展望" class="headerlink" title="5.3 技术影响与未来展望"></a>5.3 技术影响与未来展望</h2><div class="note warning icon-padding flat"><i class="note-icon fas fa-crystal-ball"></i><p><strong>CNN架构设计的未来趋势：</strong></p>
+<p>虽然Transformer架构在计算机视觉领域崭露头角，体现了”<strong>可扩展性胜过归纳偏置</strong>“的趋势，但CNN仍有重要价值：</p>
+<ul>
+<li><strong>资源受限场景</strong>：高效的CNN架构在边缘设备中不可替代</li>
+<li><strong>混合架构</strong>：结合CNN计算效率与Transformer表达能力</li>
+<li><strong>设计方法论</strong>：NDS方法为其他架构设计提供重要启发</li>
+<li><strong>理论指导</strong>：系统化设计原则推动架构设计科学化发展</li>
+</ul>
+</div>
+<div class="note info icon-padding flat"><i class="note-icon fas fa-lightbulb"></i><p><strong>对深度学习架构设计的启示：</strong></p>
+<p>RegNet的成功不仅在于具体的网络设计，更在于提供了一套系统化的架构设计方法论，为未来的网络架构创新指明了方向。</p>
+</div>
+<hr>
+<div class="reference-source"><span class="hidden-anchor" id="referfrom_[1]"></span><a class="reference-anchor" href="#referto_[1]">[1]<div class="reference-anchor-up fa-solid fa-angles-up"></div></a><a class="reference-link" target="_blank" rel="noopener" href="https://d2l.ai/">Dive into Deep Learning (D2L)</a></div>
+<div class="reference-source"><span class="hidden-anchor" id="referfrom_[2]"></span><a class="reference-anchor" href="#referto_[2]">[2]<div class="reference-anchor-up fa-solid fa-angles-up"></div></a><a class="reference-link" target="_blank" rel="noopener" href="https://arxiv.org/abs/2003.13678">Designing Network Design Spaces</a></div>
+<div class="reference-source"><span class="hidden-anchor" id="referfrom_[3]"></span><a class="reference-anchor" href="#referto_[3]">[3]<div class="reference-anchor-up fa-solid fa-angles-up"></div></a><a class="reference-link" target="_blank" rel="noopener" href="https://arxiv.org/abs/1905.11946">EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks</a></div></article><div class="post-copyright"><div class="post-copyright__title"><span class="post-copyright-info"><h>CNN 网络架构的设计</h></span></div><div class="post-copyright__type"><span class="post-copyright-info"><a href="https://ricemifan.top/posts/cnn-architecture-design.html">https://ricemifan.top/posts/cnn-architecture-design.html</a></span></div><div class="post-copyright-m"><div class="post-copyright-m-info"><div class="post-copyright-a"><h>作者</h><div class="post-copyright-cc-info"><h>MYFAV</h></div></div><div class="post-copyright-c"><h>发布于</h><div class="post-copyright-cc-info"><h>2025-08-12</h></div></div><div class="post-copyright-u"><h>更新于</h><div class="post-copyright-cc-info"><h>2025-08-12</h></div></div><div class="post-copyright-c"><h>许可协议</h><div class="post-copyright-cc-info"><a class="icon" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a rel="noopener" target="_blank" title="CC BY-NC-SA 4.0" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></div></div></div></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/"><div class="tags-punctuation"><svg class="faa-tada icon" style="height:1.1em;width:1.1em;fill:currentColor;position:relative;top:2px;margin-right:3px" aria-hidden="true"><use xlink:href="#icon-sekuaibiaoqian"></use></svg></div>深度学习基础</a><a class="post-meta__tags" href="/tags/PyTorch/"><div class="tags-punctuation"><svg class="faa-tada icon" style="height:1.1em;width:1.1em;fill:currentColor;position:relative;top:2px;margin-right:3px" aria-hidden="true"><use xlink:href="#icon-sekuaibiaoqian"></use></svg></div>PyTorch</a><a class="post-meta__tags" href="/tags/CNN%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/"><div class="tags-punctuation"><svg class="faa-tada icon" style="height:1.1em;width:1.1em;fill:currentColor;position:relative;top:2px;margin-right:3px" aria-hidden="true"><use xlink:href="#icon-sekuaibiaoqian"></use></svg></div>CNN架构设计</a><a class="post-meta__tags" href="/tags/NAS/"><div class="tags-punctuation"><svg class="faa-tada icon" style="height:1.1em;width:1.1em;fill:currentColor;position:relative;top:2px;margin-right:3px" aria-hidden="true"><use xlink:href="#icon-sekuaibiaoqian"></use></svg></div>NAS</a><a class="post-meta__tags" href="/tags/RegNet/"><div class="tags-punctuation"><svg class="faa-tada icon" style="height:1.1em;width:1.1em;fill:currentColor;position:relative;top:2px;margin-right:3px" aria-hidden="true"><use xlink:href="#icon-sekuaibiaoqian"></use></svg></div>RegNet</a><a class="post-meta__tags" href="/tags/AnyNet/"><div class="tags-punctuation"><svg class="faa-tada icon" style="height:1.1em;width:1.1em;fill:currentColor;position:relative;top:2px;margin-right:3px" aria-hidden="true"><use xlink:href="#icon-sekuaibiaoqian"></use></svg></div>AnyNet</a></div></div><link rel="stylesheet" href="/css/coin.css" media="defer" onload="this.media='all'"/><div class="post-reward"><button class="tip-button reward-button"><span class="tip-button__text">投喂作者</span><div class="coin-wrapper"><div class="coin"><div class="coin__middle"></div><div class="coin__back"></div><div class="coin__front"></div></div></div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/assets/payvx.jpg" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/payvx.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/assets/alipay.jpg" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></button></div><audio id="coinAudio" src="https://npm.elemecdn.com/akilar-candyassets@1.0.36/audio/aowu.m4a"></audio><script defer="defer" src="/js/coin.js"></script><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/posts/densenet.html"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://source.fomal.cc/img/default_cover_14.webp" onerror="onerror=null;src='/assets/r2.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">稠密连接网络 (DenseNet)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/layers_and_blocks.html" title="层和块"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://source.fomal.cc/img/default_cover_14.webp" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2025-08-04</div><div class="title">层和块</div></div></a></div><div><a href="/posts/parameter_management.html" title="参数管理"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://source.fomal.cc/img/default_cover_14.webp" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2025-08-03</div><div class="title">参数管理</div></div></a></div><div><a href="/posts/custom_layer.html" title="自定义层"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://source.fomal.cc/img/default_cover_14.webp" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2025-08-04</div><div class="title">自定义层</div></div></a></div><div><a href="/posts/deferred_initialization.html" title="延后初始化"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://source.fomal.cc/img/default_cover_14.webp" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2025-08-04</div><div class="title">延后初始化</div></div></a></div><div><a href="/posts/residual_block.html" title="残差块与分组残差块"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://source.fomal.cc/img/default_cover_14.webp" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2025-08-06</div><div class="title">残差块与分组残差块</div></div></a></div><div><a href="/posts/dense_block.html" title="稠密块"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://source.fomal.cc/img/default_cover_14.webp" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2025-08-06</div><div class="title">稠密块</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><svg class="meta_icon" style="width:22px;height:22px;position:relative;top:5px"><use xlink:href="#icon-mulu1"></use></svg><span style="font-weight:bold">目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-AnyNet%EF%BC%9A%E7%B3%BB%E7%BB%9F%E5%8C%96%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AE%BE%E8%AE%A1%E7%A9%BA%E9%97%B4"><span class="toc-text">1. AnyNet：系统化的网络设计空间</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84%E7%BB%84%E6%88%90"><span class="toc-text">1.1 网络架构组成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-ResNeXt%E5%9D%97%E7%9A%84%E5%8F%82%E6%95%B0%E5%8C%96%E8%AE%BE%E8%AE%A1"><span class="toc-text">1.2 ResNeXt块的参数化设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-AnyNet%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-text">1.3 AnyNet代码实现</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E7%BD%91%E7%BB%9C%E8%AE%BE%E8%AE%A1%E7%A9%BA%E9%97%B4%E7%9A%84%E5%88%86%E5%B8%83%E5%92%8C%E5%8F%82%E6%95%B0%E5%88%86%E6%9E%90"><span class="toc-text">2. 网络设计空间的分布和参数分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E8%AE%BE%E8%AE%A1%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%97%AE%E9%A2%98"><span class="toc-text">2.1 设计空间复杂度问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-NDS%E6%96%B9%E6%B3%95%E7%9A%84%E6%A0%B8%E5%BF%83%E5%81%87%E8%AE%BE"><span class="toc-text">2.2 NDS方法的核心假设</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E7%B4%AF%E7%A7%AF%E5%88%86%E5%B8%83%E5%87%BD%E6%95%B0-CDF-%E5%88%86%E6%9E%90"><span class="toc-text">2.3 累积分布函数(CDF)分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-%E6%B8%90%E8%BF%9B%E5%BC%8F%E7%BA%A6%E6%9D%9F%E5%AE%9E%E9%AA%8C"><span class="toc-text">2.4 渐进式约束实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-CNN%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-text">2.5 CNN架构设计原则</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-RegNet%EF%BC%9A%E8%A7%84%E5%88%99%E5%8C%96%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AE%BE%E8%AE%A1"><span class="toc-text">3. RegNet：规则化的网络设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-RegNet%E8%AE%BE%E8%AE%A1%E7%90%86%E5%BF%B5"><span class="toc-text">3.1 RegNet设计理念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E7%BD%91%E7%BB%9C%E5%AE%BD%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%A2%9E%E9%95%BF%E6%A8%A1%E5%9E%8B"><span class="toc-text">3.2 网络宽度的线性增长模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-RegNetX32%E5%AE%9E%E7%8E%B0"><span class="toc-text">3.3 RegNetX32实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-RegNetX32%E5%8F%82%E6%95%B0%E5%88%86%E6%9E%90"><span class="toc-text">3.4 RegNetX32参数分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-5-RegNetY%EF%BC%9A%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%A2%9E%E5%BC%BA%E7%89%88%E6%9C%AC"><span class="toc-text">3.5 RegNetY：注意力增强版本</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E6%80%A7%E8%83%BD%E8%AF%84%E4%BC%B0"><span class="toc-text">4. 模型训练与性能评估</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E8%AE%AD%E7%BB%83%E9%85%8D%E7%BD%AE"><span class="toc-text">4.1 训练配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-%E8%AE%AD%E7%BB%83%E7%BB%93%E6%9E%9C%E5%88%86%E6%9E%90"><span class="toc-text">4.2 训练结果分析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E6%80%BB%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B"><span class="toc-text">5. 总结与展望</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-CNN%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%8F%91%E5%B1%95%E5%8E%86%E7%A8%8B"><span class="toc-text">5.1 CNN架构设计的发展历程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-%E6%A0%B8%E5%BF%83%E8%B4%A1%E7%8C%AE%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-text">5.2 核心贡献与设计原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-%E6%8A%80%E6%9C%AF%E5%BD%B1%E5%93%8D%E4%B8%8E%E6%9C%AA%E6%9D%A5%E5%B1%95%E6%9C%9B"><span class="toc-text">5.3 技术影响与未来展望</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-color: transparent;"><div id="footer-wrap"><div id="ft"><div class="ft-item-1"><div class="t-top"><div class="t-t-l"><p class="ft-t t-l-t">格言🧬</p><div class="bg-ad"><div>再看看那个光点，它就在这里，这是家园，这是我们 —— 你所爱的每一个人，你认识的一个人，你听说过的每一个人，曾经有过的每一个人，都在它上面度过他们的一生✨</div><div class="btn-xz-box"><a class="btn-xz" target="_blank" rel="noopener" href="https://stellarium.org/">点击开启星辰之旅</a></div></div></div><div class="t-t-r"><p class="ft-t t-l-t">猜你想看💡</p><ul class="ft-links"><li><a href="/personal/bb/">我的唠叨</a><a href="/box/nav/">网址导航</a></li><li><a href="/social/link/">我的朋友</a><a href="/comments/">留点什么</a></li><li><a href="/personal/about/">关于作者</a><a href="/archives/">文章归档</a></li><li><a href="/categories/">文章分类</a><a href="/tags/">文章标签</a></li></ul></div></div></div><div class="ft-item-2"><p class="ft-t">推荐友链⌛</p><div class="ft-img-group"><div class="img-group-item"><a target="_blank" rel="noopener" href="https://www.wotemo.com" title="Wotemo"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.wotemo.com/img/wotemo.jpg" alt=""/></a></div><div class="img-group-item"><a href="javascript:void(0)" title="广告位招租"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://lskypro.acozycotage.net/LightPicture/2022/12/65307a5828af6790.webp" alt=""/></a></div><div class="img-group-item"><a href="javascript:void(0)" title="广告位招租"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://lskypro.acozycotage.net/LightPicture/2022/12/65307a5828af6790.webp" alt=""/></a></div><div class="img-group-item"><a href="javascript:void(0)" title="广告位招租"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://lskypro.acozycotage.net/LightPicture/2022/12/65307a5828af6790.webp" alt=""/></a></div><div class="img-group-item"><a href="javascript:void(0)" title="广告位招租"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://lskypro.acozycotage.net/LightPicture/2022/12/65307a5828af6790.webp" alt=""/></a></div><div class="img-group-item"><a href="javascript:void(0)" title="广告位招租"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://lskypro.acozycotage.net/LightPicture/2022/12/65307a5828af6790.webp" alt=""/></a></div><div class="img-group-item"><a href="javascript:void(0)" title="广告位招租"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://lskypro.acozycotage.net/LightPicture/2022/12/65307a5828af6790.webp" alt=""/></a></div><div class="img-group-item"><a href="javascript:void(0)" title="广告位招租"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://lskypro.acozycotage.net/LightPicture/2022/12/65307a5828af6790.webp" alt=""/></a></div></div></div></div><div class="copyright"><span><b>&copy;2024-2025</b></span><span><b>&nbsp;&nbsp;By MYFAV</b></span></div><div class="footer_custom_text">I wish you to become your own sun, no need to rely on who's light.<p><a target="_blank" href="https://hexo.io/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为Hexo"></a>&nbsp;<a target="_blank" href="https://butterfly.js.org/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=bitdefender" title="主题采用butterfly"></a>&nbsp;<a target="_blank" href="https://www.jsdelivr.com/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&logo=jsDelivr" title="本站使用JsDelivr为静态资源提供CDN加速"></a> &nbsp;<a target="_blank" href="https://vercel.com/ "><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Hosted-Vervel-brightgreen?style=flat&logo=Vercel" title="本站采用双线部署，默认线路托管于Vercel"></a>&nbsp;<a target="_blank" href="https://vercel.com/ "><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Hosted-Coding-0cedbe?style=flat&logo=Codio" title="本站采用双线部署，联通线路托管于Coding"></a>&nbsp;<a target="_blank" href="https://github.com/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=GitHub" title="本站项目由Gtihub托管"></a>&nbsp;<a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&logo=Claris" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"></a></p></div><div id="workboard"></div><p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" title="博客框架为Hexo_v6.3.0"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://sourcebucket.s3.ladydaily.com/badge/Frame-Hexo-blue.svg" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" title="主题版本Butterfly_v4.3.1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://sourcebucket.s3.ladydaily.com/badge/Theme-Butterfly-6513df.svg" alt=""/></a><a class="github-badge" target="_blank" href="https://vercel.com/" style="margin-inline:5px" title="本站采用多线部署，主线路托管于Vercel"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://sourcebucket.s3.ladydaily.com/badge/Hosted-Vercel-brightgreen.svg" alt=""/></a><a class="github-badge" target="_blank" href="https://user.51.la/" style="margin-inline:5px" title="本站数据分析得益于51la技术支持"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://sourcebucket.s3.ladydaily.com/badge/Analytics-51la-3db1eb.svg" alt=""/></a><a class="github-badge" target="_blank" href="https://icp.gov.moe/?keyword=20226665" style="margin-inline:5px" title="本站已加入萌ICP豪华套餐，萌ICP备20226665号"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://sourcebucket.s3.ladydaily.com/badge/萌ICP备-20226665-fe1384.svg" alt=""/></a><a class="github-badge" target="_blank" href="https://bitiful.dogecast.com/buckets" style="margin-inline:5px" title="本网站经Service Worker分流至缤纷云对象存储"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src=" https://sourcebucket.s3.ladydaily.com/badge/Bucket-缤纷云-9c62da.svg" alt=""/></a><a class="github-badge" target="_blank" href="https://www.netdun.net/" style="margin-inline:5px" title="本站使用网盾星球提供CDN加速与防护"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://sourcebucket.s3.ladydaily.com/badge/CDN-网盾星球-fff2cc.svg" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" title="本网站源码由Github提供存储仓库"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src=" https://sourcebucket.s3.ladydaily.com/badge/Source-Github-d021d6.svg" alt=""/></a></p></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><a class="icon-V hidden" onclick="switchNightMode()" title="浅色和深色模式转换"><svg width="25" height="25" viewBox="0 0 1024 1024"><use id="modeicon" xlink:href="#icon-moon"></use></svg></a><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button><button class="share" type="button" title="右键模式" onclick="changeMouseMode()"><i class="fas fa-mouse"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog right_side"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button class="share" type="button" title="分享链接" onclick="share()"><i class="fas fa-share-nodes"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i><span id="percent">0<span>%</span></span></button><button id="go-down" type="button" title="直达底部" onclick="btf.scrollToDest(document.body.scrollHeight, 500)"><i class="fas fa-arrow-down"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div class="js-pjax" id="rightMenu"><div class="rightMenu-group rightMenu-small"><a class="rightMenu-item" href="javascript:window.history.back();"><i class="fa fa-arrow-left"></i></a><a class="rightMenu-item" href="javascript:window.history.forward();"><i class="fa fa-arrow-right"></i></a><a class="rightMenu-item" href="javascript:window.location.reload();"><i class="fa fa-refresh"></i></a><a class="rightMenu-item" href="javascript:rmf.scrollToTop();"><i class="fa fa-arrow-up"></i></a></div><div class="rightMenu-group rightMenu-line hide" id="menu-text"><a class="rightMenu-item" href="javascript:rmf.copySelect();"><i class="fa fa-copy"></i><span>复制</span></a><a class="rightMenu-item" href="javascript:window.open(&quot;https://www.baidu.com/s?wd=&quot;+window.getSelection().toString());window.location.reload();"><i class="fa fa-search"></i><span>百度搜索</span></a></div><div class="rightMenu-group rightMenu-line hide" id="menu-too"><a class="rightMenu-item" href="javascript:window.open(window.getSelection().toString());window.location.reload();"><i class="fa fa-link"></i><span>转到链接</span></a></div><div class="rightMenu-group rightMenu-line hide" id="menu-paste"><a class="rightMenu-item" href="javascript:rmf.paste()"><i class="fa fa-copy"></i><span>粘贴</span></a></div><div class="rightMenu-group rightMenu-line hide" id="menu-post"><a class="rightMenu-item" href="#post-comment"><i class="fas fa-comment"></i><span>空降评论</span></a><a class="rightMenu-item" href="javascript:rmf.copyWordsLink()"><i class="fa fa-link"></i><span>复制本文地址</span></a></div><div class="rightMenu-group rightMenu-line hide" id="menu-to"><a class="rightMenu-item" href="javascript:rmf.openWithNewTab()"><i class="fa fa-window-restore"></i><span>新窗口打开</span></a><a class="rightMenu-item" id="menu-too" href="javascript:rmf.open()"><i class="fa fa-link"></i><span>转到链接</span></a><a class="rightMenu-item" href="javascript:rmf.copyLink()"><i class="fa fa-copy"></i><span>复制链接</span></a></div><div class="rightMenu-group rightMenu-line hide" id="menu-img"><a class="rightMenu-item" href="javascript:rmf.saveAs()"><i class="fa fa-download"></i><span>保存图片</span></a><a class="rightMenu-item" href="javascript:rmf.openWithNewTab()"><i class="fa fa-window-restore"></i><span>在新窗口打开</span></a><a class="rightMenu-item" href="javascript:rmf.copyLink()"><i class="fa fa-copy"></i><span>复制图片链接</span></a></div><div class="rightMenu-group rightMenu-line"><a class="rightMenu-item" href="javascript:randomPost()"><i class="fa fa-paper-plane"></i><span>随便逛逛</span></a><a class="rightMenu-item" href="javascript:switchNightMode();"><i class="fa fa-moon"></i><span>昼夜切换</span></a><a class="rightMenu-item" href="/personal/about/"><i class="fa fa-info-circle"></i><span>关于博客</span></a><a class="rightMenu-item" href="javascript:toggleWinbox();"><i class="fas fa-cog"></i><span>美化设置</span></a><a class="rightMenu-item" href="javascript:rmf.fullScreen();"><i class="fas fa-expand"></i><span>切换全屏</span></a><a class="rightMenu-item" href="javascript:window.print();"><i class="fa-solid fa-print"></i><span>打印页面</span></a></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.staticfile.org/fancyapps-ui/4.0.31/fancybox.umd.min.js"></script><script src="https://cdn.staticfile.org/instant.page/5.1.0/instantpage.min.js" type="module"></script><script src="https://cdn.staticfile.org/vanilla-lazyload/17.3.1/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><script async="async">var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())
+setTimeout(function(){preloader.endLoading();}, 5000);
+document.getElementById('loading-box').addEventListener('click',()=> {preloader.endLoading()})</script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = '/pluginsSrc/mathjax/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>(()=>{
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo.ricemifan.top/',
+      region: '',
+      onCommentLoaded: function () {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+  }
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.ricemifan.top/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(function (res) {
+      countELement.innerText = res[0].count
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+
+  const runFn = () => {
+    init()
+    
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') {
+      setTimeout(runFn,0)
+      return
+    } 
+    getScript('https://cdn.staticfile.org/twikoo/1.6.8/twikoo.all.min.js').then(runFn)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = () => {
+      loadTwikoo()
+    }
+  }
+})()</script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo.ricemifan.top/',
+        region: '',
+        pageSize: 5,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.innerHTML= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.staticfile.org/twikoo/1.6.8/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'data-lazy-src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom.innerHTML= result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script src="https://cdn.staticfile.org/jquery/3.6.3/jquery.min.js"></script><script async src="https://cdn1.tianli0.top/npm/vue@2.6.14/dist/vue.min.js"></script><script async src="https://cdn1.tianli0.top/npm/element-ui@2.15.6/lib/index.js"></script><script async src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script><script defer type="text/javascript" src="https://cdn1.tianli0.top/npm/sweetalert2@8.19.0/dist/sweetalert2.all.js"></script><script async src="//npm.elemecdn.com/pace-js@1.2.4/pace.min.js"></script><script defer src="https://cdn1.tianli0.top/gh/nextapps-de/winbox/dist/winbox.bundle.min.js"></script><script async src="//at.alicdn.com/t/c/font_3586335_hsivh70x0fm.js"></script><script async src="//at.alicdn.com/t/c/font_3636804_gr02jmjr3y9.js"></script><script async src="//at.alicdn.com/t/c/font_3612150_kfv55xn3u2g.js"></script><script async src="https://cdn.wpon.cn/2022-sucai/Gold-ingot.js"></script><canvas id="universe"></canvas><canvas id="snow"></canvas><script defer src="/js/fomal.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn1.tianli0.top/npm/js-heo@1.0.12/metingjs/Meting.min.js"></script><script src="https://lib.baomitu.com/pjax/0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show","#web_bg",".js-pjax","#bibi","body > title","#app","#tag-echarts","#posts-echart","#categories-echarts"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --> <script data-pjax>if(document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    var parent = document.getElementById('recent-posts');
+    var child = '<div class="recent-post-item" style="width:100%;height: auto"><div id="catalog_magnet"><div class="magnet_item"><a class="magnet_link" href="https://ricemifan.top/categories/数学基础/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🍡 MYFAVの数学学习笔记 (1)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://ricemifan.top/categories/深度学习/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🍼 MYFAVの深度学习笔记 (23)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://ricemifan.top/categories/Markdown/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🍥 MYFAVのMarkdown笔记 (1)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><a class="magnet_link_more"  href="https://ricemifan.top/categories/" style="flex:1;text-align: center;margin-bottom: 10px;">查看更多...</a></div></div>';
+    console.log('已挂载magnet')
+    parent.insertAdjacentHTML("afterbegin",child)}
+     </script><style>#catalog_magnet{flex-wrap: wrap;display: flex;width:100%;justify-content:space-between;padding: 10px 10px 0 10px;align-content: flex-start;}.magnet_item{flex-basis: calc(33.333333333333336% - 5px);background: #e9e9e9;margin-bottom: 10px;border-radius: 8px;transition: all 0.2s ease-in-out;}.magnet_item:hover{background: var(--text-bg-hover)}.magnet_link_more{color:#555}.magnet_link{color:black}.magnet_link:hover{color:white}@media screen and (max-width: 600px) {.magnet_item {flex-basis: 100%;}}.magnet_link_context{display:flex;padding: 10px;font-size:16px;transition: all 0.2s ease-in-out;}.magnet_link_context:hover{padding: 10px 20px;}</style>
+    <style></style><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('recent-posts');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/2013454d.html&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://source.fomal.cc/img/default_cover_14.webp" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2024-09-29</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/2013454d.html&quot;);" href="javascript:void(0);" alt="">Markdown语法与外挂标签写法汇总</a><div class="blog-slider__text">🥧本文汇总Markdown格式以及外挂标签在网页端的渲染效果，可作为文档进行查询</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/2013454d.html&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><div class="js-pjax"><script async="async">var arr = document.getElementsByClassName('recent-post-item');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '2s');
+    arr[i].setAttribute('data-wow-delay', '200ms');
+    arr[i].setAttribute('data-wow-offset', '30');
+    arr[i].setAttribute('data-wow-iteration', '1');
+  }</script><script async="async">var arr = document.getElementsByClassName('card-widget');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '2s');
+    arr[i].setAttribute('data-wow-delay', '200ms');
+    arr[i].setAttribute('data-wow-offset', '30');
+    arr[i].setAttribute('data-wow-iteration', '1');
+  }</script></div><script defer src="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/wow.min.js"></script><script defer src="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/wow_init.js"></script><script data-pjax src="https://npm.elemecdn.com/hexo-filter-gitcalendar/lib/gitcalendar.js"></script><script data-pjax>
+  function gitcalendar_injector_config(){
+      var parent_div_git = document.getElementById('gitZone');
+      var item_html = '<div class="recent-post-item" id="gitcalendarBar" style="width:100%;height:auto;padding:10px;"><style>#git_container{min-height: 320px}@media screen and (max-width:650px) {#git_container{min-height: 0px}}</style><div id="git_loading" style="width:10%;height:100%;margin:0 auto;display: block;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animatetransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animatetransform></path></svg><style>#git_container{display: none;}</style></div><div id="git_container"></div></div>';
+      parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+      console.log('已挂载gitcalendar')
+      }
+
+    if( document.getElementById('gitZone') && (location.pathname ==='/site/census/'|| '/site/census/' ==='all')){
+        gitcalendar_injector_config()
+        GitCalendarInit("/api?null",['#d9e0df', '#c6e0dc', '#a8dcd4', '#9adcd2', '#89ded1', '#77e0d0', '#5fdecb', '#47dcc6', '#39dcc3', '#1fdabe', '#00dab9'],'null')
+    }
+  </script><!-- hexo injector body_end end --></body></html>
